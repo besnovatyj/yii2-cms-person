@@ -5,9 +5,9 @@ namespace Besnovatyj\Person\forms\backend\search;
 use Besnovatyj\Person\entities\Category;
 use Besnovatyj\Person\entities\person\Person;
 use Besnovatyj\Person\helpers\PersonHelper;
+use common\treeModule\TreeQueryScope;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use yii\helpers\ArrayHelper;
 
 class PersonSearch extends Model
 {
@@ -25,8 +25,8 @@ class PersonSearch extends Model
     {
         return [
             [['id', 'category_id', 'status'], 'integer'],
-            [['name',], 'safe'],
-//            [['date_from', 'date_to'], 'date', 'format' => 'php:Y-m-d'],
+            [['name', 'birthday'], 'safe'],
+            [['date_from', 'date_to'], 'date', 'format' => 'php:Y-m-d'],
         ];
     }
 
@@ -62,18 +62,18 @@ class PersonSearch extends Model
         $query->andFilterWhere(['like', 'name', $this->name]);
 
         $query
-            ->andFilterWhere(['>=', 'date', $this->date_from ? strtotime($this->date_from) : null])
-            ->andFilterWhere(['<=', 'date', $this->date_to ? strtotime($this->date_to) : null]);
+            ->andFilterWhere(['>=', 'birthday', $this->date_from ? strtotime($this->date_from) : null])
+            ->andFilterWhere(['<=', 'birthday', $this->date_to ? strtotime($this->date_to) : null]);
 
         return $dataProvider;
     }
 
     public function categoriesList(): array
     {
-        return ArrayHelper::map(Category::find()->andWhere(['>', 'depth', 0])->orderBy('lft')->asArray()->all(), 'id', function (array $category) {
-            return ($category['depth'] > 1 ? str_repeat('-- ', $category['depth'] - 1) . ' ' : '') . $category['name'];
-        });
+        $scope = new TreeQueryScope(Category::class);
+        return $scope->dropdownTree();
     }
+
 
     public function statusList(): array
     {

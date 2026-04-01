@@ -21,6 +21,7 @@ use yii\web\View;
 <?= $form->field($model, 'birthday')->widget(DateTimeRangeWidget::class, [
     'attributeFrom' => 'date_from',
     'attributeTo'   => 'date_to',
+    'valueFormat' => 'Y-m-d',
 ]) ?>
 
 <?= $form->field($model, 'category_id')->dropDownList(
