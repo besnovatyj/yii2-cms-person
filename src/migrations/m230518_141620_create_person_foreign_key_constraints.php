@@ -2,9 +2,10 @@
 
 use Besnovatyj\Person\migrations\m230518_141550_create_person_persons_table;
 use Besnovatyj\Person\migrations\m230518_141560_create_person_photos_table;
+use Besnovatyj\Person\migrations\m230518_141610_create_person_videos_table;
 use common\components\migration\BaseMigration;
 
-class m230518_141600_create_person_foreign_key_constraints extends BaseMigration
+class m230518_141620_create_person_foreign_key_constraints extends BaseMigration
 {
     /**
      * @throws Exception
@@ -23,6 +24,17 @@ class m230518_141600_create_person_foreign_key_constraints extends BaseMigration
             'id',
             'CASCADE',
         );
+
+        // Видео
+        $this->createFKs(
+            m230518_141610_create_person_videos_table::TABLE_NAME,
+            'person_id',
+            m230518_141550_create_person_persons_table::TABLE_NAME,
+            'id',
+            'CASCADE',
+            'CASCADE',
+        );
+
 
         Yii::$app->db->createCommand('SET foreign_key_checks = 1')->execute();
 

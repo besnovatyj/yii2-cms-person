@@ -2,9 +2,7 @@
 
 use Besnovatyj\Images\widgets\upload\Widget;
 use Besnovatyj\Person\entities\person\Person;
-use Besnovatyj\Person\entities\person\Video;
 use Besnovatyj\Person\helpers\PersonHelper;
-use Besnovatyj\Person\thumbnails\modalvideowidget\ModalVideoWidget;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -28,6 +26,11 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Активировать', ['activate', 'id' => $person->id], ['class' => 'btn  btn-success', 'data-method' => 'post']) ?>
     <?php endif; ?>
     <?= Html::a('Редактировать', ['update', 'id' => $person->id], ['class' => 'btn  btn-primary']) ?>
+    <?= Html::a(
+        '<i class="bi bi-camera-video"></i> Управление видео (' . count($person->videos) . ')',
+        ['/Person/backend/video/index', 'personId' => $person->id],
+        ['class' => 'btn btn-primary']
+    ) ?>
     <?= Html::a('Удалить', ['delete', 'id' => $person->id], [
         'class' => 'btn  btn-danger',
         'data'  => [
@@ -105,13 +108,22 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php endif; ?>
 
         <h3 class="card-title">Видео</h3>
+        <?= Html::a(
+            '<i class="bi bi-camera-video"></i> Управление видео (' . count($person->videos) . ')',
+            ['/Person/backend/video/index', 'personId' => $person->id],
+            ['class' => 'btn btn-outline-primary btn-sm mb-3']
+        ) ?>
         <?php if (count($person->videos) > 0): ?>
-            <?= ModalVideoWidget::widget([
-                'stringsWithUrl' => array_map(static function (Video $video) {
-                    return $video->srcString;
-                }, $person->videos),
-                'personId' => $person->id,
-            ]) ?>
+            <div class="row g-2">
+                <?php foreach ($person->videos as $video): ?>
+                    <div class="col-4">
+                        <img class="img-fluid rounded"
+                             src="<?= Html::encode($video->thumbnail_url) ?>"
+                             alt="<?= Html::encode($video->provider_type) ?>"
+                             loading="lazy">
+                    </div>
+                <?php endforeach; ?>
+            </div>
         <?php endif; ?>
 
     </div>

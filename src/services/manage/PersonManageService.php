@@ -6,7 +6,6 @@ namespace Besnovatyj\Person\services\manage;
 
 use Besnovatyj\Meta\Meta;
 use Besnovatyj\Person\entities\person\Person;
-use Besnovatyj\Person\entities\person\Video;
 use Besnovatyj\Person\forms\backend\person\PersonForm;
 use Besnovatyj\Person\repositories\CategoryRepository;
 use Besnovatyj\Person\repositories\PersonRepository;
@@ -57,7 +56,6 @@ class PersonManageService
                 $form->meta->description,
                 $form->meta->keywords
             ),
-            $this->buildVideos($form->videos),
         );
 
         $transaction = Yii::$app->db->beginTransaction();
@@ -90,7 +88,6 @@ class PersonManageService
                 $form->meta->description,
                 $form->meta->keywords
             ),
-            $this->buildVideos($form->videos),
         );
 
         $person->changeMainCategory($category->id);
@@ -135,20 +132,4 @@ class PersonManageService
         $this->persons->remove($person);
     }
 
-    // ==================== Private methods ====================
-
-    /**
-     * @param array<string|null> $formVideos
-     * @return Video[]
-     */
-    private function buildVideos(array $formVideos): array
-    {
-        $videos = [];
-        foreach ($formVideos as $src) {
-            if (!empty($src)) {
-                $videos[] = new Video($src);
-            }
-        }
-        return $videos;
-    }
 }

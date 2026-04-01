@@ -3,16 +3,20 @@
 namespace Besnovatyj\Person\forms\backend\search;
 
 use Besnovatyj\Person\entities\Category;
+use Besnovatyj\Person\entities\person\Person;
 use Besnovatyj\Person\helpers\PersonHelper;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use Besnovatyj\Person\entities\person\Person;
 use yii\helpers\ArrayHelper;
 
 class PersonSearch extends Model
 {
     public $id;
+
     public $birthday;
+    public $date_from;
+    public $date_to;
+
     public $name;
     public $category_id;
     public $status;
@@ -21,10 +25,8 @@ class PersonSearch extends Model
     {
         return [
             [['id', 'category_id', 'status'], 'integer'],
-            [[
-                'name',
-//                'birthday'
-            ], 'safe'],
+            [['name',], 'safe'],
+//            [['date_from', 'date_to'], 'date', 'format' => 'php:Y-m-d'],
         ];
     }
 
@@ -58,6 +60,10 @@ class PersonSearch extends Model
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name]);
+
+        $query
+            ->andFilterWhere(['>=', 'date', $this->date_from ? strtotime($this->date_from) : null])
+            ->andFilterWhere(['<=', 'date', $this->date_to ? strtotime($this->date_to) : null]);
 
         return $dataProvider;
     }

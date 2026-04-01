@@ -73,7 +73,9 @@ class ImportController extends Controller
                 "Импорт завершён. Категорий: {$stats['categories']}, "
                 . "персон: {$stats['persons']}, "
                 . "фото (БД): {$stats['photos']}, "
-                . "фото (файлы скопированы): {$stats['photosCopied']}."
+                . "фото (файлы скопированы): {$stats['photosCopied']}, "
+                . "видео: {$stats['videos']}"
+                . ($stats['videoErrors'] > 0 ? " (ошибок парсинга: {$stats['videoErrors']})" : '') . '.'
             );
 
             if (!empty($stats['errors'])) {

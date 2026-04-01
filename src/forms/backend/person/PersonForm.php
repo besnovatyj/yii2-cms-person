@@ -7,7 +7,6 @@ namespace Besnovatyj\Person\forms\backend\person;
 use Besnovatyj\CompositeForm\CompositeForm;
 use Besnovatyj\Meta\MetaForm;
 use Besnovatyj\Person\entities\person\Person;
-use Besnovatyj\Person\entities\person\Video;
 use Besnovatyj\Person\forms\backend\CategoriesForm;
 
 /**
@@ -24,8 +23,6 @@ class PersonForm extends CompositeForm
     public $name;
     public $birthday;
     public $description;
-    /** @var Video[] */
-    public $videos;
 
     public function __construct(?Person $person = null, $config = [])
     {
@@ -33,9 +30,6 @@ class PersonForm extends CompositeForm
             $this->name        = $person->name;
             $this->birthday    = $person->birthday;
             $this->description = $person->description;
-            $this->videos      = array_map(static function (Video $video) {
-                return $video->srcString;
-            }, $person->videos);
             $this->categories  = new CategoriesForm($person);
             $this->meta        = new MetaForm($person->meta);
         } else {
@@ -55,7 +49,6 @@ class PersonForm extends CompositeForm
             [['birthday'], 'date', 'format' => 'yyyy-mm-dd'],
             [['name'], 'string', 'max' => 255],
             [['description'], 'string'],
-            ['videos', 'each', 'rule' => ['string']],
         ];
     }
 
@@ -77,7 +70,6 @@ class PersonForm extends CompositeForm
             'name'        => 'Имя',
             'birthday'    => 'Дата рождения',
             'description' => 'Общая информация',
-            'videos'      => 'Видео',
         ];
     }
 }

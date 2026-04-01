@@ -8,9 +8,7 @@ use Besnovatyj\Meta\MetaBehavior;
 use common\components\dispatcher\AggregateRoot;
 use Besnovatyj\Meta\Meta;
 use common\components\dispatcher\EventTrait;
-use Besnovatyj\Person\behaviors\VideosBehavior;
 use Besnovatyj\Person\entities\Category;
-use Besnovatyj\Person\entities\events\ThumbnailGenerate;
 use Besnovatyj\Person\entities\person\queries\PersonQuery;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -28,7 +26,7 @@ use yii\db\ActiveRecord;
  * @property Category $category
  * @property Photo $mainPhoto
  * @property Photo[] $photos
- * @property Video[] $videos - Json encoded array
+ * @property PersonVideo[] $videos
  */
 class Person extends ActiveRecord implements AggregateRoot
 {
@@ -38,7 +36,6 @@ class Person extends ActiveRecord implements AggregateRoot
     public const int STATUS_ACTIVE = 1;
 
     public $meta;
-    public $videos;
 
     public static function create(
         $categoryId,
@@ -46,7 +43,6 @@ class Person extends ActiveRecord implements AggregateRoot
         $birthday,
         $description,
         Meta $meta,
-        $videos
     ): self
     {
         $person = new static();
@@ -55,10 +51,8 @@ class Person extends ActiveRecord implements AggregateRoot
         $person->birthday = $birthday;
         $person->description = $description;
         $person->meta = $meta;
-        $person->videos = $videos;
         $person->status = self::STATUS_DRAFT;
         $person->created_at = time();
-        $person->recordEvent(new ThumbnailGenerate($person));
         return $person;
     }
 
@@ -67,14 +61,12 @@ class Person extends ActiveRecord implements AggregateRoot
         $birthday,
         $description,
         Meta $meta,
-        $videos
     ): void
     {
         $this->name = $name;
         $this->birthday = $birthday;
         $this->description = $description;
         $this->meta = $meta;
-        $this->videos = $videos;
     }
 
     public function changeMainCategory($categoryId): void
@@ -173,6 +165,11 @@ class Person extends ActiveRecord implements AggregateRoot
         return $this->hasOne(Photo::class, ['id' => 'main_photo_id']);
     }
 
+    public function getVideos(): ActiveQuery
+    {
+        return $this->hasMany(PersonVideo::class, ['person_id' => 'id'])->orderBy('sort');
+    }
+
     ##########################
 
     public static function tableName(): string
@@ -184,7 +181,6 @@ class Person extends ActiveRecord implements AggregateRoot
     {
         return [
             MetaBehavior::class,
-            VideosBehavior::class,
         ];
     }
 
@@ -200,6 +196,9 @@ class Person extends ActiveRecord implements AggregateRoot
         if (parent::beforeDelete()) {
             foreach ($this->photos as $photo) {
                 $photo->delete();
+            }
+            foreach ($this->videos as $video) {
+                $video->delete();
             }
             return true;
         }

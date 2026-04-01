@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Besnovatyj\Person\services\import;
 
 use Besnovatyj\Person\entities\Category;
+use Besnovatyj\Person\entities\person\PersonVideo;
+use Besnovatyj\Person\thumbnails\VideoFactory;
 use common\NestedSetsCore\claude\NestedSetsColumnMap;
 use common\NestedSetsCore\claude\NestedSetsRepository;
 use common\NestedSetsCore\claude\NestedSetsService;
@@ -13,6 +15,7 @@ use RuntimeException;
 use Throwable;
 use Yii;
 use yii\db\Connection;
+use yii\db\Exception;
 use yii\db\Query;
 
 /**
@@ -26,6 +29,7 @@ use yii\db\Query;
 class ImportService
 {
     private DescriptionBuilder $descriptionBuilder;
+    private VideoFactory $videoFactory;
     private Connection $db;
 
     /** @var array<int, int> old_category_id => new_category_id */
@@ -40,6 +44,7 @@ class ImportService
     public function __construct()
     {
         $this->descriptionBuilder = new DescriptionBuilder();
+        $this->videoFactory = new VideoFactory();
         $this->db = Yii::$app->db;
     }
 
@@ -51,11 +56,13 @@ class ImportService
     public function run(): array
     {
         $stats = [
-            'categories'  => 0,
-            'persons'     => 0,
-            'photos'      => 0,
+            'categories'   => 0,
+            'persons'      => 0,
+            'photos'       => 0,
             'photosCopied' => 0,
-            'errors'      => [],
+            'videos'       => 0,
+            'videoErrors'  => 0,
+            'errors'       => [],
         ];
 
         $transaction = $this->db->beginTransaction();
@@ -68,6 +75,10 @@ class ImportService
             $stats['errors'] = $photoErrors;
 
             $this->updateMainPhotoIds();
+
+            [$videosImported, $videoErrors] = $this->importVideos();
+            $stats['videos'] = $videosImported;
+            $stats['videoErrors'] = $videoErrors;
 
             $transaction->commit();
         } catch (Throwable $e) {
@@ -93,7 +104,11 @@ class ImportService
             ->from('{{%person_categories}}')
             ->count('*', $this->db);
 
-        return (int)$personsCount === 0 && (int)$categoriesCount === 0;
+        $videosCount = (new Query())
+            ->from('{{%person_videos}}')
+            ->count('*', $this->db);
+
+        return (int)$personsCount === 0 && (int)$categoriesCount === 0 && (int)$videosCount === 0;
     }
 
     // ==================== Категории ====================
@@ -321,6 +336,114 @@ class ImportService
 
         return [$dbCount, $copiedCount, $errors];
     }
+
+    // ==================== Видеоролики ====================
+
+    /**
+     * Импорт видеороликов: парсит videos_json из импортированных персон
+     * и заполняет таблицу person_videos пред вычисленными данными.
+     *
+     * @return array [int $imported, int $errors]
+     * @throws Exception
+     */
+    private function importVideos(): array
+    {
+        $imported = 0;
+        $errors = 0;
+
+        $rows = new Query()
+            ->select(['id', 'videos_json'])
+            ->from('{{%person_persons}}')
+            ->where(['not', ['videos_json' => null]])
+            ->andWhere(['not', ['videos_json' => '[]']])
+            ->andWhere(['not', ['videos_json' => '']])
+            ->all($this->db);
+
+        foreach ($rows as $row) {
+            $personId = (int)$row['id'];
+            $videos = json_decode($row['videos_json'], true);
+
+            if (!is_array($videos)) {
+                continue;
+            }
+
+            $sort = 0;
+            foreach ($videos as $videoItem) {
+                $srcString = $videoItem['srcString'] ?? '';
+                if (empty($srcString)) {
+                    continue;
+                }
+
+                $iframeUrl = '';
+                $thumbnailUrl = '';
+                $providerType = 'unknown';
+                $status = PersonVideo::STATUS_ACTIVE;
+
+                try {
+                    $videoData = $this->videoFactory->getVideoDataByString($srcString);
+                    if ($videoData !== null) {
+                        $iframeUrl = $videoData->iframeUrl;
+                        $thumbnailUrl = $videoData->thumbnailUrl;
+                        $providerType = $this->detectProviderType($srcString);
+                    } else {
+                        $status = PersonVideo::STATUS_DISABLED;
+                        $errors++;
+                        Yii::warning(
+                            "Импорт видео: не удалось распарсить для person_id=$personId: $srcString",
+                            'import',
+                        );
+                    }
+                } catch (Throwable $e) {
+                    $status = PersonVideo::STATUS_DISABLED;
+                    $errors++;
+                    Yii::warning(
+                        "Импорт видео: ошибка для person_id=$personId: {$e->getMessage()}",
+                        'import',
+                    );
+                }
+
+                $now = time();
+                $this->db->createCommand()->insert('{{%person_videos}}', [
+                    'person_id' => $personId,
+                    'source_url' => $srcString,
+                    'iframe_url' => $iframeUrl,
+                    'thumbnail_url' => $thumbnailUrl,
+                    'provider_type' => $providerType,
+                    'sort' => $sort,
+                    'status' => $status,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ])->execute();
+
+                $imported++;
+                $sort++;
+            }
+        }
+
+        return [$imported, $errors];
+    }
+
+    /**
+     * Определяет тип провайдера по URL.
+     */
+    private function detectProviderType(string $url): string
+    {
+        if (str_contains($url, 'youtu')) {
+            return PersonVideo::TYPE_YOUTUBE;
+        }
+        if (str_contains($url, 'vimeo')) {
+            return PersonVideo::TYPE_VIMEO;
+        }
+        if (str_contains($url, 'rutube')) {
+            return PersonVideo::TYPE_RUTUBE;
+        }
+        if (str_contains($url, 'vk')) {
+            return PersonVideo::TYPE_VK;
+        }
+        return 'unknown';
+    }
+
+    // ==================== Прочее ====================
 
     /**
      * Обновляет main_photo_id у персон после импорта фотографий.

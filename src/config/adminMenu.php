@@ -46,6 +46,27 @@ return [
         ],
     ],
 
+    // Проверка видео
+    [
+        'label' => 'Проверка видео',
+        'iconClass' => 'bi bi-camera-video me-1',
+        'url' => ['/Person/backend/video/test-page'],
+        'active' => static function () {
+            return strpos(\Yii::$app->request->url, 'Person/backend/video');
+        },
+        '_meta' => [
+            'placements' => [
+                [
+                    'location' => 'left-sidebar',
+                    'group' => 'Актёры',
+                    'groupIcon' => 'bi bi-person-badge',
+                    'priority' => 100,
+                    'groupPriority' => 50,
+                ],
+            ],
+        ],
+    ],
+
     // Импорт из OldPerson
     [
         'label' => 'Импорт из OldPerson',

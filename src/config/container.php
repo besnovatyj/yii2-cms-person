@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 use Besnovatyj\Meta\Meta;
 use Besnovatyj\Person\entities\Category;
+use Besnovatyj\Person\repositories\PersonRepository;
+use Besnovatyj\Person\services\manage\PersonVideoService;
+use Besnovatyj\Person\thumbnails\VideoFactory;
 use common\treeModule\entities\Node;
 use common\treeModule\forms\TreeNodeFormInterface;
 use common\treeModule\TreeManager;
@@ -51,6 +54,19 @@ return [
         // TreeQueryScope для чтения дерева категорий Person
         'person.tree.scope' => function () {
             return new TreeQueryScope(Category::class);
+        },
+
+        // Фабрика видео-данных
+        VideoFactory::class => function () {
+            return new VideoFactory();
+        },
+
+        // Сервис управления видеороликами
+        PersonVideoService::class => function () {
+            return new PersonVideoService(
+                Yii::$container->get(VideoFactory::class),
+                Yii::$container->get(PersonRepository::class),
+            );
         },
 
     ],

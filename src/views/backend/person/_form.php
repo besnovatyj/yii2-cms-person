@@ -72,22 +72,6 @@ use yii\web\View;
     </div>
     <div class="col-md-6">
         <div class="card">
-            <?= $model->getAttributeLabel('videos') ?>
-            <?php // TODO - убрать зависимость от "unclead\multipleinput\MultipleInput" ?>
-            <?= $form->field($model, 'videos')
-                ->label(false)
-                ->widget(\unclead\multipleinput\MultipleInput::class, [
-                    'max' => 20,
-                    'iconSource' => \unclead\multipleinput\MultipleInput::ICONS_SOURCE_FONTAWESOME,
-//                    'columnClass'  => \yii\bootstrap5\ActiveField::class,
-                    'enableError' => true,
-                ]);
-            ?>
-            <?= Html::submitButton('Сохранить', ['class' => 'btn  btn-block btn-success']) ?>
-        </div><!-- Videos -->
-    </div>
-    <div class="col-md-6">
-        <div class="card">
             <h3 class="card-title">SEO</h3>
             <div class="card-body">
                 <?= $form->field($model->meta, 'title')->textInput(['class' => 'form-control rounded-0'])->label('Заголовок') ?>
