@@ -36,4 +36,12 @@ class VimeoProvider extends AbstractProvider
         // for https://vimeo.com/672693509
         return 'https://player.vimeo.com/video/' . $match;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getIframeAllow(): string
+    {
+        return 'autoplay; fullscreen; picture-in-picture';
+    }
 }

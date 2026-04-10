@@ -11,21 +11,18 @@ use yii\data\ActiveDataProvider;
 
 class PersonSearch extends Model
 {
-    public $id;
-
-    public $birthday;
-    public $date_from;
-    public $date_to;
-
-    public $name;
-    public $category_id;
-    public $status;
+    public ?string $id = null;
+    public ?string $date_from = null;
+    public ?string $date_to = null;
+    public ?string $name = null;
+    public ?string $category_id = null;
+    public ?string $status = null;
 
     public function rules(): array
     {
         return [
             [['id', 'category_id', 'status'], 'integer'],
-            [['name', 'birthday'], 'safe'],
+            [['name',], 'safe'],
             [['date_from', 'date_to'], 'date', 'format' => 'php:Y-m-d'],
         ];
     }
@@ -54,7 +51,6 @@ class PersonSearch extends Model
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'birthday' => $this->birthday,
             'category_id' => $this->category_id,
             'status' => $this->status,
         ]);
@@ -62,8 +58,8 @@ class PersonSearch extends Model
         $query->andFilterWhere(['like', 'name', $this->name]);
 
         $query
-            ->andFilterWhere(['>=', 'birthday', $this->date_from ? strtotime($this->date_from) : null])
-            ->andFilterWhere(['<=', 'birthday', $this->date_to ? strtotime($this->date_to) : null]);
+            ->andFilterWhere(['>=', 'birthday', $this->date_from ?: null])
+            ->andFilterWhere(['<=', 'birthday', $this->date_to ?: null]);
 
         return $dataProvider;
     }

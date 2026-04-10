@@ -44,12 +44,32 @@ abstract class AbstractProvider
         return new VideoData(
             iframeUrl: $this->resolveIframeUrl($markup, $match),
             thumbnailUrl: $this->resolveThumbnailUrl($match),
+            iframeAllow: $this->getIframeAllow(),
+            iframeReferrerPolicy: $this->getIframeReferrerPolicy(),
         );
     }
 
     abstract protected function resolveThumbnailUrl(string $match): string;
 
     abstract protected function resolveIframeUrl(string $markup, string $match): string;
+
+    /**
+     * Значение атрибута allow для iframe (Permissions Policy).
+     * Переопределяется в дочерних провайдерах при необходимости.
+     */
+    protected function getIframeAllow(): string
+    {
+        return '';
+    }
+
+    /**
+     * Значение атрибута referrerpolicy для iframe.
+     * Переопределяется в дочерних провайдерах при необходимости.
+     */
+    protected function getIframeReferrerPolicy(): string
+    {
+        return '';
+    }
 
     /**
      * Выполняет GET-запрос через нативный cURL.

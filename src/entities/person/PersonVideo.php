@@ -16,6 +16,8 @@ use yii\db\ActiveRecord;
  * @property string $iframe_url
  * @property string $thumbnail_url
  * @property string $provider_type
+ * @property string $iframe_allow
+ * @property string $iframe_referrerpolicy
  * @property int $sort
  * @property int $status
  * @property int $created_at
@@ -43,6 +45,8 @@ class PersonVideo extends ActiveRecord
         string $thumbnailUrl,
         string $providerType,
         int $sort,
+        string $iframeAllow = '',
+        string $iframeReferrerPolicy = '',
     ): self {
         $video = new static();
         $video->person_id = $personId;
@@ -50,6 +54,8 @@ class PersonVideo extends ActiveRecord
         $video->iframe_url = $iframeUrl;
         $video->thumbnail_url = $thumbnailUrl;
         $video->provider_type = $providerType;
+        $video->iframe_allow = $iframeAllow;
+        $video->iframe_referrerpolicy = $iframeReferrerPolicy;
         $video->sort = $sort;
         $video->status = self::STATUS_ACTIVE;
         $video->created_at = time();
@@ -86,10 +92,16 @@ class PersonVideo extends ActiveRecord
     /**
      * Обновляет предвычисленные данные iframe и превью.
      */
-    public function refreshData(string $iframeUrl, string $thumbnailUrl): void
-    {
+    public function refreshData(
+        string $iframeUrl,
+        string $thumbnailUrl,
+        string $iframeAllow = '',
+        string $iframeReferrerPolicy = '',
+    ): void {
         $this->iframe_url = $iframeUrl;
         $this->thumbnail_url = $thumbnailUrl;
+        $this->iframe_allow = $iframeAllow;
+        $this->iframe_referrerpolicy = $iframeReferrerPolicy;
         $this->updated_at = time();
     }
 
@@ -121,6 +133,8 @@ class PersonVideo extends ActiveRecord
             'iframe_url' => 'URL iframe',
             'thumbnail_url' => 'URL превью',
             'provider_type' => 'Провайдер',
+            'iframe_allow' => 'Iframe allow',
+            'iframe_referrerpolicy' => 'Iframe referrerpolicy',
             'sort' => 'Сортировка',
             'status' => 'Статус',
             'created_at' => 'Дата создания',

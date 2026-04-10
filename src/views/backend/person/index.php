@@ -7,6 +7,7 @@ use yii\bootstrap5\LinkPager;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\web\View;
 
 /* @var $this View */
@@ -16,6 +17,25 @@ use yii\web\View;
 $this->title = 'Актёры';
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['mobileFiltersForm'] = $this->render('_search', ['model' => $searchModel]);
+
+// Стили для htmx спиннера на кнопку "Пометить к удалению"
+$this->registerCss('
+/* По умолчанию скрываем спиннер */
+.htmx-indicator {
+    display: none;
+}
+
+/* Когда кнопка в состоянии htmx-request, показываем спиннер */
+.htmx-request .htmx-indicator {
+    display: inline-block;
+}
+
+/* Опционально: скрываем иконку мусорки, пока крутится спиннер,
+   чтобы кнопка не растягивалась */
+.htmx-request i {
+    display: none;
+}
+');
 
 $data = GridView::widget([
     'dataProvider' => $dataProvider,
@@ -41,7 +61,7 @@ $data = GridView::widget([
                 return $model->mainPhoto ? Html::img($model->mainPhoto->getThumbFileUrl('file', 'admin')) : null;
             },
             'format' => 'raw',
-            'contentOptions' => ['style' => 'width: 100px'],
+            'contentOptions' => ['style' => 'width: 100px', 'data-label' => 'Фото'],
         ],
         [
             'attribute' => 'name',
@@ -51,7 +71,6 @@ $data = GridView::widget([
             'format' => 'raw',
             'contentOptions' => ['data-label' => 'ФИО'],
         ],
-//        'birthday',
         [
             'attribute' => 'birthday',
             'value' => function (Person $model) {
@@ -70,7 +89,7 @@ $data = GridView::widget([
             'attribute' => 'category_id',
             'filter' => $searchModel->categoriesList(),
             'value' => 'category.name',
-            'contentOptions' => ['data-label' => 'Категория'],
+            'contentOptions' => ['data-label' => 'Категория, раздел'],
         ],
         [
             'attribute' => 'status',
@@ -79,10 +98,60 @@ $data = GridView::widget([
                 return PersonHelper::statusLabel($model);
             },
             'format' => 'raw',
-
             'contentOptions' => ['data-label' => 'Статус'],
         ],
-        'id',
+        [
+            'attribute' => 'videosCount',
+            'label' => 'Видео',
+            'value' => function (Person $model) {
+                return count($model->videos);
+            },
+            'format' => 'raw',
+            'contentOptions' => ['data-label' => 'Видео'],
+        ],
+        [
+            'class' => '\backend\widgets\grid\ActionColumn',
+            'template' => '{view} {update} {mark-for-deletion}',
+            'buttons' => [
+                'view' => static function (string $url, Person $model): string {
+                    return Html::a(
+                        '<i class="bi bi-eye"></i>',
+                        ['view', 'id' => $model->id],
+                        ['class' => 'btn btn-sm btn-outline-secondary', 'title' => 'Смотреть'],
+                    );
+                },
+                'update' => static function (string $url, Person $model): string {
+                    return Html::a(
+                        '<i class="bi bi-pencil"></i>',
+                        ['update', 'id' => $model->id],
+                        ['class' => 'btn btn-sm btn-outline-primary', 'title' => 'Изменить'],
+                    );
+                },
+                'mark-for-deletion' => static function (string $url, Person $model): string {
+                    if ($model->isPendingDelete()) {
+                        return Html::tag('span', '<i class="bi bi-trash"></i>', [
+                            'class' => 'btn btn-sm btn-danger disabled',
+                            'title' => 'Уже помечен к удалению',
+                        ]);
+                    }
+                    return Html::a(
+                        '<i class="bi bi-trash"></i>'.
+                        '<span class="spinner-border spinner-border-sm htmx-indicator" role="status" aria-hidden="true"></span>',
+                        '#',
+                        [
+                            'class' => 'btn btn-sm btn-outline-danger d-inline-flex align-items-center gap-1',
+                            'title' => 'Пометить к удалению',
+                            'hx-post' => Url::to(['mark-for-deletion', 'id' => $model->id]),
+                            'hx-target' => 'closest tr',
+                            'hx-swap' => 'outerHTML swap:0.5s',
+                            // 'hx-confirm' => 'Пометить «' . Html::encode($model->name) . '» к удалению?',
+                            // Указываем htmx, что индикатор находится внутри ЭТОГО элемента
+                            'hx-indicator' => 'this',
+                        ],
+                    );
+                },
+            ],
+        ]
     ],
 ]);
 
@@ -94,10 +163,13 @@ $pager = LinkPager::widget([
 
 ?>
 
-<div class="text-danger border border-warning m-1 p-2">TODO - Сделать флаг удаления и страницу удаления помеченных</div>
-
-<p>
-    <?= Html::a('Добавить', ['create'], ['class' => 'btn  btn-success']) ?>
+<p class="d-flex gap-2">
+    <?= Html::a('Добавить', ['create'], ['class' => 'btn btn-success']) ?>
+    <?= Html::a(
+        '<i class="bi bi-trash"></i> Удалить подготовленные',
+        ['pending-delete'],
+        ['class' => 'btn btn-outline-danger'],
+    ) ?>
 </p>
 
 <div class="card">

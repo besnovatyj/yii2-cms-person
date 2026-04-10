@@ -34,6 +34,7 @@ class Person extends ActiveRecord implements AggregateRoot
 
     public const int STATUS_DRAFT = 0;
     public const int STATUS_ACTIVE = 1;
+    public const int STATUS_PENDING_DELETE = 2;
 
     public $meta;
 
@@ -90,6 +91,14 @@ class Person extends ActiveRecord implements AggregateRoot
         $this->status = self::STATUS_DRAFT;
     }
 
+    public function markForDeletion(): void
+    {
+        if ($this->isPendingDelete()) {
+            throw new DomainException('Already marked for deletion.');
+        }
+        $this->status = self::STATUS_PENDING_DELETE;
+    }
+
     public function isActive(): bool
     {
         return $this->status === self::STATUS_ACTIVE;
@@ -98,6 +107,11 @@ class Person extends ActiveRecord implements AggregateRoot
     public function isDraft(): bool
     {
         return $this->status === self::STATUS_DRAFT;
+    }
+
+    public function isPendingDelete(): bool
+    {
+        return $this->status === self::STATUS_PENDING_DELETE;
     }
 
     public function getSeoTitle(): string

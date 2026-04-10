@@ -8,10 +8,10 @@ use yii\db\ActiveQuery;
 class PersonQuery extends ActiveQuery
 {
     /**
-     * @param null $alias
+     * @param string|null $alias
      * @return $this
      */
-    public function active($alias = null): static
+    public function active(?string $alias = null): static
     {
         return $this->andWhere([
             ($alias ? $alias . '.' : '') . 'status' => Person::STATUS_ACTIVE,

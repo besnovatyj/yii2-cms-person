@@ -17,11 +17,6 @@ class Module extends BaseModule
         }
     }
 
-    public static function getContainerConfig(): array
-    {
-        return require __DIR__ . '/config/container.php';
-    }
-
     public static function getAdminMenu(): array
     {
         return require __DIR__ . '/config/adminMenu.php';
@@ -40,6 +35,11 @@ class Module extends BaseModule
     public static function getDependencies(): array
     {
         return require __DIR__ . '/config/dependencies.php';
+    }
+
+    public static function setContainerConfig()
+    {
+        return (require __DIR__ . '/config/container.php')(\Yii::$container);
     }
 
 }

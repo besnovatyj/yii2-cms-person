@@ -26,12 +26,12 @@ use yii\web\View;
 
 <?= $form->field($model, 'category_id')->dropDownList(
     $model->categoriesList(),
-    ['prompt' => '']
+    ['prompt' => 'Все']
 ) ?>
 
 <?= $form->field($model, 'status')->dropDownList(
     $model->statusList(),
-    ['prompt' => '']
+    ['prompt' => 'Любой']
 ) ?>
 
 <?php ActiveForm::end(); ?>

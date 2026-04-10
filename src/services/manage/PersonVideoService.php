@@ -53,6 +53,8 @@ class PersonVideoService
             $videoData->thumbnailUrl,
             $providerType,
             $maxSort + 1,
+            $videoData->iframeAllow,
+            $videoData->iframeReferrerPolicy,
         );
 
         if (!$video->save()) {
@@ -133,7 +135,12 @@ class PersonVideoService
             throw new DomainException('Не удалось распознать URL видео при обновлении.');
         }
 
-        $video->refreshData($videoData->iframeUrl, $videoData->thumbnailUrl);
+        $video->refreshData(
+            $videoData->iframeUrl,
+            $videoData->thumbnailUrl,
+            $videoData->iframeAllow,
+            $videoData->iframeReferrerPolicy,
+        );
 
         if (!$video->save()) {
             throw new RuntimeException('Ошибка сохранения видеоролика.');

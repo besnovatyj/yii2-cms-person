@@ -5,13 +5,14 @@ namespace Besnovatyj\Person\forms\frontend\search;
 use Besnovatyj\Person\entities\Category;
 use common\treeModule\TreeQueryScope;
 use yii\base\Model;
+use yii\db\ActiveQuery;
 
 class SearchForm extends Model
 {
     public ?string $text = null;
-    public ?int $category = null;
-    public ?int $age_from = null;
-    public ?int $age_to = null;
+    public int|string|null $category = null;
+    public int|string|null $age_from = null;
+    public int|string|null $age_to = null;
 
     public function rules(): array
     {
@@ -24,7 +25,13 @@ class SearchForm extends Model
     public function categoriesList(): array
     {
         $scope = new TreeQueryScope(Category::class);
-        return $scope->dropdownTree();
+        return $scope->dropdownTree(
+            nameAttribute: 'name',
+            filter: function (ActiveQuery $query) {
+                $query->active();
+            },
+            indent: '-'
+        );
     }
 
     public function formName(): string
@@ -35,7 +42,7 @@ class SearchForm extends Model
     public function attributeLabels(): array
     {
         return [
-            'text' => 'Общий поиск',
+            'text' => 'Имя',
             'category' => 'Категория',
             'age_from' => 'От',
             'age_to' => 'До',

@@ -52,4 +52,20 @@ class YoutubeProvider extends AbstractProvider
         // <iframe src="https://www.youtube.com/embed/Dzyn8Y-1Itg" ></iframe>
         return 'https://www.youtube.com/embed/' . $match;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getIframeAllow(): string
+    {
+        return 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getIframeReferrerPolicy(): string
+    {
+        return 'strict-origin-when-cross-origin';
+    }
 }

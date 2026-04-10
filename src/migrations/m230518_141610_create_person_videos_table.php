@@ -33,6 +33,10 @@ class m230518_141610_create_person_videos_table extends BaseMigration
                 ->comment('Предвычисленный URL превью видеоролика'),
             'provider_type' => $this->string(32)->notNull()
                 ->comment('Тип провайдера: youtube, vimeo, vk, rutube'),
+            'iframe_allow' => $this->string(500)->notNull()->defaultValue('')
+                ->comment('Значение атрибута allow для iframe (Permissions Policy)'),
+            'iframe_referrerpolicy' => $this->string(100)->notNull()->defaultValue('')
+                ->comment('Значение атрибута referrerpolicy для iframe'),
             'sort' => $this->integer(10)->notNull()->defaultValue(0)
                 ->comment('Порядок сортировки'),
             'status' => $this->smallInteger(1)->notNull()->defaultValue(1)

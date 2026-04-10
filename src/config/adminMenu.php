@@ -25,13 +25,13 @@ return [
         ],
     ],
 
-    // Категории
+    // Дерево категорий
     [
-        'label' => 'Категории',
+        'label' => 'Дерево категорий',
         'iconClass' => 'bi bi-diagram-3 me-1',
         'url' => ['/Person/backend/category/index'],
         'active' => static function () {
-            return strpos(\Yii::$app->request->url, 'Person/backend/category');
+            return strpos(\Yii::$app->request->url, 'Person/backend/category/index');
         },
         '_meta' => [
             'placements' => [
@@ -39,7 +39,28 @@ return [
                     'location' => 'left-sidebar',
                     'group' => 'Актёры',
                     'groupIcon' => 'bi bi-person-badge',
-                    'priority' => 100,
+                    'priority' => 200,
+                    'groupPriority' => 50,
+                ],
+            ],
+        ],
+    ],
+
+    // Список категорий
+    [
+        'label' => 'Список категорий',
+        'iconClass' => 'bi bi-list-ul me-1',
+        'url' => ['/Person/backend/category/list'],
+        'active' => static function () {
+            return (bool)preg_match('#Person/backend/category/(list|view)#', Yii::$app->request->url);
+        },
+        '_meta' => [
+            'placements' => [
+                [
+                    'location' => 'left-sidebar',
+                    'group' => 'Актёры',
+                    'groupIcon' => 'bi bi-person-badge',
+                    'priority' => 300,
                     'groupPriority' => 50,
                 ],
             ],
@@ -60,7 +81,7 @@ return [
                     'location' => 'left-sidebar',
                     'group' => 'Актёры',
                     'groupIcon' => 'bi bi-person-badge',
-                    'priority' => 100,
+                    'priority' => 400,
                     'groupPriority' => 50,
                 ],
             ],
@@ -81,7 +102,7 @@ return [
                     'location' => 'left-sidebar',
                     'group' => 'Актёры',
                     'groupIcon' => 'bi bi-person-badge',
-                    'priority' => 100,
+                    'priority' => 500,
                     'groupPriority' => 50,
                 ],
             ],

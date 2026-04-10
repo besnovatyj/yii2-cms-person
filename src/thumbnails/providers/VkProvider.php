@@ -51,6 +51,8 @@ class VkProvider extends AbstractProvider
         return new VideoData(
             iframeUrl: $this->resolveIframeUrl($markup, $match, $iframeUrlWithHash),
             thumbnailUrl: $this->resolveThumbnailUrl($match, $iframeUrlWithHash),
+            iframeAllow: $this->getIframeAllow(),
+            iframeReferrerPolicy: $this->getIframeReferrerPolicy(),
         );
     }
 
@@ -73,6 +75,14 @@ class VkProvider extends AbstractProvider
         // background-image:url(https://i.mycdn.me/getVideoPreview?...)
         preg_match('#(https://(\S*?\.\S*?))([\s)\[\]{},;"\':<]|\.\s|$)#i', $previewDiv->getAttribute('style'), $matches);
         return $matches[1] ?? '';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getIframeAllow(): string
+    {
+        return 'autoplay; fullscreen; encrypted-media';
     }
 
     protected function resolveIframeUrl(string $markup, string $match, ?string $iframeUrlWithHash = null): string

@@ -63,3 +63,65 @@
 .video-card .card {
     position: relative;
 }
+
+/* Иконка воспроизведения на превью */
+
+.video-play-btn {
+    cursor: pointer;
+}
+
+.video-play-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3rem;
+    color: rgba(255, 255, 255, 0.85);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s, color 0.2s;
+    pointer-events: none;
+}
+
+.video-play-btn:hover .video-play-icon {
+    color: #fff;
+    transform: translate(-50%, -50%) scale(1.15);
+}
+
+/* Контейнер iframe в модальном окне */
+
+.video-preview-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background-color: #000;
+}
+
+.video-preview-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Кнопка копирования */
+
+.video-copy-btn {
+    font-size: 0.8rem;
+    line-height: 1;
+}
+
+.video-copy-btn.copied {
+    color: #198754 !important;
+}
+
+/* Анимация перемещения карточки при сортировке */
+
+.video-card.moving {
+    animation: video-card-highlight 0.4s ease;
+}
+
+@keyframes video-card-highlight {
+    0% { opacity: 0.5; transform: scale(0.97); }
+    100% { opacity: 1; transform: scale(1); }
+}

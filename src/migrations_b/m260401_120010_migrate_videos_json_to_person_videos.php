@@ -11,7 +11,7 @@ use Yii;
 
 /**
  * Оставить только нужные миграции в папке и запустить
- * `docker compose exec php-fpm /app/yii migrate m260401_120000_create_person_videos_table --migrationNamespaces="Besnovatyj\Person\migrations"`
+ * `docker compose exec php-fpm /app/yii migrate m260401_120010_migrate_videos_json_to_person_videos --migrationNamespaces="Besnovatyj\Person\migrations"`
  */
 
 /**

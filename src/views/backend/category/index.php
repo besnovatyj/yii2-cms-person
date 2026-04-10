@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="btn-group">
             <?= Html::a(
                 '<i class="bi bi-list-ul"></i> Список',
-                ['/Person/backend/category/index'],
+                ['/Person/backend/category/list'],
                 ['class' => 'btn btn-outline-secondary']
             ) ?>
         </div>

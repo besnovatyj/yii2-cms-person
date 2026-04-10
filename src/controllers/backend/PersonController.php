@@ -69,14 +69,16 @@ class PersonController extends Controller
             'verbs' => [
                 'class'   => VerbFilter::class,
                 'actions' => [
-                    'delete'          => ['POST'],
-                    'activate'        => ['POST'],
-                    'draft'           => ['POST'],
-                    'add-image'       => ['POST'],
-                    'delete-image'    => ['POST'],
-                    'get-images'      => ['POST'],
-                    'set-main-image'  => ['POST'],
-                    'set-new-sort'    => ['POST'],
+                    'delete'            => ['POST'],
+                    'activate'          => ['POST'],
+                    'draft'             => ['POST'],
+                    'mark-for-deletion' => ['POST'],
+                    'delete-pending'    => ['POST'],
+                    'add-image'         => ['POST'],
+                    'delete-image'      => ['POST'],
+                    'get-images'        => ['POST'],
+                    'set-main-image'    => ['POST'],
+                    'set-new-sort'      => ['POST'],
                 ],
             ],
         ];
@@ -215,6 +217,80 @@ class PersonController extends Controller
             }
         }
         return $this->goReferer();
+    }
+
+    /**
+     * Помечает персону к удалению.
+     *
+     * При htmx-запросе (заголовок HX-Request) возвращает обновлённую строку таблицы
+     * вместо редиректа — страница не перезагружается.
+     *
+     * @param int $id
+     * @return Response|string
+     * @throws NotFoundHttpException
+     */
+    public function actionMarkForDeletion(int $id): Response|string
+    {
+        $isHtmx = Yii::$app->request->headers->has('HX-Request');
+
+        try {
+            $this->service->markForDeletion($id);
+        } catch (Throwable $e) {
+            Yii::$app->errorHandler->logException($e);
+            if ($isHtmx) {
+                // Возвращаем строку без изменений — пометка не удалась
+                return $this->renderPartial('_row', ['model' => $this->findModel($id)]);
+            }
+            if (YII_DEBUG) {
+                Yii::$app->session->setFlash('error', VarDumper::dumpAsString($e->getMessage()));
+            } else {
+                Yii::$app->session->setFlash('error', 'Ошибка');
+            }
+            return $this->goReferer();
+        }
+
+        if ($isHtmx) {
+            return $this->renderPartial('_row', ['model' => $this->findModel($id)]);
+        }
+        return $this->goReferer();
+    }
+
+    /**
+     * Страница подтверждения удаления помеченных персон.
+     *
+     * GET  — показывает список персон и форму подтверждения.
+     * POST — выполняет удаление и редиректит на index.
+     *
+     * @return Response|string
+     */
+    public function actionPendingDelete(): Response|string
+    {
+        $persons = $this->persons->getAllPendingDelete();
+
+        return $this->render('pending-delete', [
+            'persons' => $persons,
+        ]);
+    }
+
+    /**
+     * Выполняет фактическое удаление всех помеченных персон.
+     *
+     * @return Response
+     */
+    public function actionDeletePending(): Response
+    {
+        try {
+            $this->service->deletePending();
+            Yii::$app->session->setFlash('success', 'Помеченные персоны удалены.');
+        } catch (Throwable $e) {
+            Yii::$app->errorHandler->logException($e);
+            if (YII_DEBUG) {
+                Yii::$app->session->setFlash('error', VarDumper::dumpAsString($e->getMessage()));
+            } else {
+                Yii::$app->session->setFlash('error', 'Ошибка при удалении.');
+            }
+        }
+        return $this->redirect(['index']);
     }
 
     /**

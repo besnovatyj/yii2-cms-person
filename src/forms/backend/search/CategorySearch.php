@@ -9,11 +9,11 @@ use Besnovatyj\Person\entities\Category;
 
 class CategorySearch extends Model
 {
-    public $id;
-    public $name;
-    public $slug;
-    public $status;
-    public $title;
+    public int|string|null $id = null;
+    public int|string|null $name = null;
+    public int|string|null $slug = null;
+    public int|string|null $status = null;
+    public int|string|null $title = null;
 
     public function rules(): array
     {
@@ -29,7 +29,7 @@ class CategorySearch extends Model
      */
     public function search(array $params): ActiveDataProvider
     {
-        $query = Category::find()->andWhere(['>', 'depth', 0]);
+        $query = Category::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

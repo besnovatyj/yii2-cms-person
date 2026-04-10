@@ -123,6 +123,30 @@ class PersonManageService
     }
 
     /**
+     * @throws Exception
+     */
+    public function markForDeletion(int $id): void
+    {
+        $person = $this->persons->get($id);
+        $person->markForDeletion();
+        $this->persons->save($person);
+    }
+
+    /**
+     * Удаляет все персоны, помеченные к удалению.
+     *
+     * @throws Throwable
+     * @throws StaleObjectException
+     */
+    public function deletePending(): void
+    {
+        $persons = $this->persons->getAllPendingDelete();
+        foreach ($persons as $person) {
+            $this->persons->remove($person);
+        }
+    }
+
+    /**
      * @throws Throwable
      * @throws StaleObjectException
      */

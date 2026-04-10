@@ -61,22 +61,45 @@ $endpoints = [
      data-csrf-token="<?= Yii::$app->request->csrfToken ?>">
 
     <?php foreach ($person->videos as $video): ?>
-        <div class="col-md-4 col-sm-6 video-card" data-video-id="<?= $video->id ?>">
+        <div class="col-md-4 col-sm-6 video-card"
+             data-video-id="<?= $video->id ?>"
+             data-iframe-url="<?= Html::encode($video->iframe_url) ?>"
+             data-iframe-allow="<?= Html::encode($video->iframe_allow) ?>"
+             data-iframe-referrerpolicy="<?= Html::encode($video->iframe_referrerpolicy) ?>"
+             data-source-url="<?= Html::encode($video->source_url) ?>">
             <div class="card h-100 <?= $video->isActive() ? '' : 'border-danger opacity-50' ?>">
-                <div class="video-thumbnail-wrap">
+                <div class="video-thumbnail-wrap video-play-btn" role="button" title="Смотреть видео">
                     <img src="<?= Html::encode($video->thumbnail_url) ?>"
                          class="card-img-top"
                          alt="<?= Html::encode($video->provider_type) ?>"
                          loading="lazy">
+                    <div class="video-play-icon">
+                        <i class="bi bi-play-circle-fill"></i>
+                    </div>
                 </div>
                 <div class="card-body p-2">
-                    <span class="badge bg-secondary"><?= Html::encode($video->provider_type) ?></span>
-                    <small class="d-block text-muted text-truncate mt-1"
+                    <div class="d-flex align-items-center gap-1 mb-1">
+                        <span class="badge bg-secondary"><?= Html::encode($video->provider_type) ?></span>
+                        <button type="button"
+                                class="btn btn-sm btn-outline-secondary video-copy-btn p-0 px-1 border-0"
+                                title="Скопировать исходную ссылку">
+                            <i class="bi bi-clipboard"></i>
+                        </button>
+                    </div>
+                    <small class="d-block text-muted text-truncate"
                            title="<?= Html::encode($video->source_url) ?>">
                         <?= Html::encode($video->source_url) ?>
                     </small>
                 </div>
                 <div class="card-footer p-2 d-flex gap-1">
+                    <button type="button" class="btn btn-sm btn-outline-secondary video-move-up-btn"
+                            title="Переместить выше">
+                        <i class="bi bi-arrow-up"></i>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary video-move-down-btn"
+                            title="Переместить ниже">
+                        <i class="bi bi-arrow-down"></i>
+                    </button>
                     <button type="button" class="btn btn-sm btn-outline-info video-verify-btn"
                             title="Проверить работоспособность">
                         <i class="bi bi-check-circle"></i>
@@ -107,3 +130,35 @@ $endpoints = [
         <p class="mt-2">Видеоролики ещё не добавлены</p>
     </div>
 <?php endif; ?>
+
+<!-- Модальное окно просмотра видео -->
+<div class="modal fade" id="video-preview-modal" tabindex="-1" aria-label="Просмотр видео" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header py-2">
+                <h6 class="modal-title">Просмотр видео</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="video-preview-container">
+                    <iframe id="video-preview-iframe"
+                            src="about:blank"
+                            frameborder="0"
+                            allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast-уведомление для копирования -->
+<div class="position-fixed bottom-0 start-50 translate-middle-x p-3" style="z-index: 1080;">
+    <div id="video-copy-toast" class="toast align-items-center text-bg-success border-0" role="alert" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                <i class="bi bi-check-lg"></i> Ссылка скопирована
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Закрыть"></button>
+        </div>
+    </div>
+</div>

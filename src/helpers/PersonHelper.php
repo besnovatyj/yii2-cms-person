@@ -13,8 +13,9 @@ class PersonHelper
     public static function statusList(): array
     {
         return [
-            Person::STATUS_DRAFT => 'НЕ активно',
-            Person::STATUS_ACTIVE => 'Активно',
+            Person::STATUS_DRAFT          => 'НЕ активно',
+            Person::STATUS_ACTIVE         => 'Активно',
+            Person::STATUS_PENDING_DELETE => 'К удалению',
         ];
     }
 
@@ -38,6 +39,10 @@ class PersonHelper
                 break;
             case Person::STATUS_ACTIVE:
                 $class = 'badge bg-success';
+                $action = 'draft';
+                break;
+            case Person::STATUS_PENDING_DELETE:
+                $class = 'badge bg-danger';
                 $action = 'draft';
                 break;
             default:

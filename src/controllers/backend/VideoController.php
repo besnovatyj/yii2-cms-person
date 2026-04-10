@@ -96,6 +96,8 @@ class VideoController extends Controller
                     'iframe_url' => $video->iframe_url,
                     'thumbnail_url' => $video->thumbnail_url,
                     'provider_type' => $video->provider_type,
+                    'iframe_allow' => $video->iframe_allow,
+                    'iframe_referrerpolicy' => $video->iframe_referrerpolicy,
                 ],
             ];
         } catch (Throwable $e) {
@@ -191,6 +193,8 @@ class VideoController extends Controller
                     'id' => $video->id,
                     'iframe_url' => $video->iframe_url,
                     'thumbnail_url' => $video->thumbnail_url,
+                    'iframe_allow' => $video->iframe_allow,
+                    'iframe_referrerpolicy' => $video->iframe_referrerpolicy,
                 ],
             ];
         } catch (Throwable $e) {

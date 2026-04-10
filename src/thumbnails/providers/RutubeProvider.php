@@ -12,7 +12,7 @@ class RutubeProvider extends AbstractProvider
     protected array $regexes = [
         // https://rutube.ru/video/319bf9087d346da9cf10c830c9cbf99c/
         // https://rutube.ru/play/embed/319bf9087d346da9cf10c830c9cbf99c
-        '/(?:https?:\/\/)?(?:www\.)?rutube\.ru\/(?:video|play\/embed)?\/([A-Za-z0-9]+)/i',
+        '/(?:https?:\/\/)?(?:www\.)?rutube\.ru\/(?:video|shorts|play\/embed)?\/([A-Za-z0-9]+)/i',
     ];
 
     /**
@@ -34,5 +34,13 @@ class RutubeProvider extends AbstractProvider
     {
         // <iframe src="https://rutube.ru/play/embed/319bf9087d346da9cf10c830c9cbf99c" ></iframe>
         return 'https://rutube.ru/play/embed/' . $match;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getIframeAllow(): string
+    {
+        return 'autoplay; fullscreen';
     }
 }

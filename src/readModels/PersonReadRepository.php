@@ -122,7 +122,7 @@ class PersonReadRepository
         if (!empty($form->text)) {
             $query->andWhere(['or',
                 ['like', 'p.name', $form->text],
-                ['like', 'description', $form->text],
+//                ['like', 'p.description', $form->text],
             ]);
         }
 
