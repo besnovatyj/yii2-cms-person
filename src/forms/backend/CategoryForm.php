@@ -4,7 +4,7 @@ namespace Besnovatyj\Person\forms\backend;
 
 use Besnovatyj\Helpers\StringHelper;
 use Besnovatyj\Person\entities\Category;
-use Besnovatyj\CompositeForm\CompositeForm;
+use Besnovatyj\Forms\CompositeForm;
 use Besnovatyj\Meta\MetaForm;
 use Besnovatyj\Validators\SlugValidator;
 use common\treeModule\forms\TreeNodeFormInterface;

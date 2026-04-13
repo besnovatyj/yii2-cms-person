@@ -2,17 +2,17 @@
 
 namespace Besnovatyj\Person\forms\frontend\search;
 
+use Besnovatyj\Forms\BaseForm;
 use Besnovatyj\Person\entities\Category;
 use common\treeModule\TreeQueryScope;
-use yii\base\Model;
 use yii\db\ActiveQuery;
 
-class SearchForm extends Model
+class SearchForm extends BaseForm
 {
     public ?string $text = null;
-    public int|string|null $category = null;
-    public int|string|null $age_from = null;
-    public int|string|null $age_to = null;
+    public ?int $category = null;
+    public ?int $age_from = null;
+    public ?int $age_to = null;
 
     public function rules(): array
     {

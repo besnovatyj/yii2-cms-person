@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Besnovatyj\Person\forms\backend\person;
 
-use Besnovatyj\CompositeForm\CompositeForm;
+use Besnovatyj\Forms\CompositeForm;
 use Besnovatyj\Meta\MetaForm;
 use Besnovatyj\Person\entities\person\Person;
 use Besnovatyj\Person\forms\backend\CategoriesForm;
