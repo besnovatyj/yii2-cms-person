@@ -18,7 +18,7 @@ use yii\web\View;
 ?>
 <tr>
     <td style="width: 100px" data-label="Фото">
-        <?= $model->mainPhoto ? Html::img($model->mainPhoto->getThumbFileUrl('file', 'admin')) : '' ?>
+        <?= $model->mainPhoto ? Html::img($model->mainPhoto->getThumbUrl('file', 'admin')) : '' ?>
     </td>
     <td data-label="ФИО">
         <?= Html::a(Html::encode($model->name), Url::to(['view', 'id' => $model->id])) ?>

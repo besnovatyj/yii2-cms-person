@@ -7,8 +7,8 @@ use Besnovatyj\Person\entities\Category;
 use Besnovatyj\Forms\CompositeForm;
 use Besnovatyj\Meta\MetaForm;
 use Besnovatyj\Validators\SlugValidator;
-use common\treeModule\forms\TreeNodeFormInterface;
-use common\treeModule\TreeQueryScope;
+use Besnovatyj\TreeManager\Manager\forms\TreeNodeFormInterface;
+use Besnovatyj\TreeManager\Manager\TreeQueryScope;
 use yii\helpers\Inflector;
 
 /**

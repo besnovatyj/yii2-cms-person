@@ -44,7 +44,7 @@ class PersonManageService
      */
     public function create(PersonForm $form): Person
     {
-        $category = $this->categories->get($form->categories->main);
+        $category = $this->categories->find($form->categories->main);
 
         $person = Person::create(
             $category->id,
@@ -77,7 +77,7 @@ class PersonManageService
     public function edit(int $id, PersonForm $form): void
     {
         $person   = $this->persons->get($id);
-        $category = $this->categories->get($form->categories->main);
+        $category = $this->categories->find($form->categories->main);
 
         $person->edit(
             $form->name,

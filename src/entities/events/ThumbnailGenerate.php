@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Besnovatyj\Person\entities\events;
 
 use Besnovatyj\Person\entities\person\Person;
-use common\components\dispatcher\EntityEvent;
+use Besnovatyj\DomainEvents\EntityEvent;
 
 /**
  * Событие генерации превью для персоны.

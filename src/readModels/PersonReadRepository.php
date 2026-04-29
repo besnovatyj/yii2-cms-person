@@ -8,7 +8,7 @@ use Exception;
 use Besnovatyj\Person\entities\Category;
 use Besnovatyj\Person\entities\person\Person;
 use Besnovatyj\Person\forms\frontend\search\SearchForm;
-use common\treeModule\TreeQueryScope;
+use Besnovatyj\TreeManager\Manager\TreeQueryScope;
 use yii\data\ActiveDataProvider;
 use yii\data\DataProviderInterface;
 use yii\db\ActiveQuery;

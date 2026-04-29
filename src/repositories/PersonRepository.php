@@ -6,8 +6,8 @@ namespace Besnovatyj\Person\repositories;
 
 use Besnovatyj\Person\entities\Category;
 use Besnovatyj\Person\entities\person\Person;
-use common\components\dispatcher\dispatchers\EventDispatcher;
-use common\treeModule\TreeQueryScope;
+use Besnovatyj\DomainEvents\dispatchers\EventDispatcher;
+use Besnovatyj\TreeManager\Manager\TreeQueryScope;
 use RuntimeException;
 use Throwable;
 use yii\data\ActiveDataProvider;

@@ -9,14 +9,6 @@ class Module extends BaseModule
 {
     public const bool EDITABLE = true;
 
-    public function init(): void
-    {
-        parent::init();
-        if (Yii::$app->id === 'app-frontend') {
-            $this->controllerNamespace = 'Besnovatyj\\' . $this->id . '\controllers\frontend';
-        }
-    }
-
     public static function getAdminMenu(): array
     {
         return require __DIR__ . '/config/adminMenu.php';

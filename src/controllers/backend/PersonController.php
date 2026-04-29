@@ -109,12 +109,7 @@ class PersonController extends Controller
                 $person = $this->service->create($form);
                 return $this->redirect(['view', 'id' => $person->id]);
             } catch (Throwable $e) {
-                Yii::$app->errorHandler->logException($e);
-                if (YII_DEBUG) {
-                    Yii::$app->session->setFlash('error', VarDumper::dumpAsString($e->getMessage()));
-                } else {
-                    Yii::$app->session->setFlash('error', 'Ошибка');
-                }
+                $this->handleDomainException($e, 'Ошибка');
             }
         }
         return $this->render('create', [
@@ -148,12 +143,7 @@ class PersonController extends Controller
                 $this->service->edit($person->id, $form);
                 return $this->redirect(['view', 'id' => $person->id]);
             } catch (Throwable $e) {
-                Yii::$app->errorHandler->logException($e);
-                if (YII_DEBUG) {
-                    Yii::$app->session->setFlash('error', VarDumper::dumpAsString($e->getMessage()));
-                } else {
-                    Yii::$app->session->setFlash('error', 'Ошибка');
-                }
+                $this->handleDomainException($e, 'Ошибка');
             }
         }
         return $this->render('update', [

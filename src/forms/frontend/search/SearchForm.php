@@ -4,7 +4,7 @@ namespace Besnovatyj\Person\forms\frontend\search;
 
 use Besnovatyj\Forms\BaseForm;
 use Besnovatyj\Person\entities\Category;
-use common\treeModule\TreeQueryScope;
+use Besnovatyj\TreeManager\Manager\TreeQueryScope;
 use yii\db\ActiveQuery;
 
 class SearchForm extends BaseForm

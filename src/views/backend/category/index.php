@@ -1,7 +1,7 @@
 <?php
 
-use common\treeModule\TreeDataSource;
-use common\treeModule\TreeWidget;
+use Besnovatyj\TreeManager\Manager\TreeDataSource;
+use Besnovatyj\TreeManager\Manager\TreeWidget;
 use Besnovatyj\Person\forms\backend\CategoryForm;
 use yii\helpers\Html;
 use yii\helpers\Url;

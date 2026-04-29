@@ -4,7 +4,7 @@ namespace Besnovatyj\Person\forms\backend;
 
 use Besnovatyj\Person\entities\Category;
 use Besnovatyj\Person\entities\person\Person;
-use common\treeModule\TreeQueryScope;
+use Besnovatyj\TreeManager\Manager\TreeQueryScope;
 use yii\base\Model;
 
 class CategoriesForm extends Model

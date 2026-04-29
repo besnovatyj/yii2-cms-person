@@ -44,17 +44,18 @@ class DescriptionBuilder
             }
         }
 
-        $charLines = [];
-        foreach ($characteristics as $item) {
-            $value = trim((string)($item['value'] ?? ''));
-            if ($value !== '' && $value !== '0' && (!str_contains($item['name'], 'Треб-я проверка'))) {
-                $charLines[] = $item['name'] . ': ' . $value;
-            }
-        }
-
-        if ($charLines !== []) {
-            $blocks[] = '<div class="mb-2"><strong>Прочее</strong><br>' . implode("<br>", $charLines) . '</div>';
-        }
+        // Кажется, нет смысла собирать данные по старым EAV
+//        $charLines = [];
+//        foreach ($characteristics as $item) {
+//            $value = trim((string)($item['value'] ?? ''));
+//            if ($value !== '' && $value !== '0' && (!str_contains($item['name'], 'Треб-я проверка'))) {
+//                $charLines[] = $item['name'] . ': ' . $value;
+//            }
+//        }
+//
+//        if ($charLines !== []) {
+//            $blocks[] = '<div class="mb-2"><strong>Прочее</strong><br>' . implode("<br>", $charLines) . '</div>';
+//        }
 
         $blocks = array_map(function ($str) {
             return '<div>' . $str . '</div>';

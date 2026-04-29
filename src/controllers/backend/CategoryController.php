@@ -7,9 +7,9 @@ use Besnovatyj\Person\forms\backend\CategoryForm;
 use Besnovatyj\Person\forms\backend\search\CategorySearch;
 use Besnovatyj\Person\repositories\CategoryRepository;
 use Besnovatyj\Person\repositories\PersonRepository;
-use common\treeModule\controllers\TreeController;
-use common\treeModule\TreeDataSource;
-use common\treeModule\TreeManager;
+use Besnovatyj\TreeManager\Manager\controllers\TreeController;
+use Besnovatyj\TreeManager\Manager\TreeDataSource;
+use Besnovatyj\TreeManager\Manager\TreeManager;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\di\NotInstantiableException;
@@ -44,7 +44,6 @@ class CategoryController extends TreeController
                     'slug' => $model->slug,
                 ];
             },
-            ['id', 'name', 'slug'], // SELECT только нужные поля
             'sort_order'
         );
         $this->createFormClass = CategoryForm::class;

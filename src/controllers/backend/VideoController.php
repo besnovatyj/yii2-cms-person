@@ -7,7 +7,6 @@ namespace Besnovatyj\Person\controllers\backend;
 use Besnovatyj\Person\repositories\NotFoundException;
 use Besnovatyj\Person\repositories\PersonRepository;
 use Besnovatyj\Person\services\manage\PersonVideoService;
-use common\components\controller\ControllerTrait;
 use Throwable;
 use Yii;
 use yii\filters\VerbFilter;
@@ -21,8 +20,6 @@ use yii\web\Response;
  */
 class VideoController extends Controller
 {
-    use ControllerTrait;
-
     public function __construct(
         $id,
         $module,
@@ -179,7 +176,7 @@ class VideoController extends Controller
     /**
      * Обновляет предвычисленные данные видеоролика (AJAX).
      */
-    public function actionRefresh(): array
+    public function actiongoReferer(): array
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 

@@ -29,7 +29,7 @@ class PersonController extends Controller
     }
 
     public function actionIndex(): string
-    {
+    { // TODO - Что за метод? Теперь много корней деревьев
         $dataProvider = $this->persons->getAll();
         $category = $this->categories->getRoot();
 

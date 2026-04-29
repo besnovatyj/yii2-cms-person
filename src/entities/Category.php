@@ -5,7 +5,7 @@ namespace Besnovatyj\Person\entities;
 use Besnovatyj\Meta\MetaBehavior;
 use Besnovatyj\Meta\Meta;
 use Besnovatyj\Person\entities\queries\CategoryQuery;
-use common\treeModule\entities\Node;
+use Besnovatyj\TreeManager\Manager\entities\Node;
 
 /**
  * @property integer $id

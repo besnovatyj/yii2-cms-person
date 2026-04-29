@@ -26,8 +26,11 @@ if ($model->parentId !== null) {
 <div class="card">
     <div class="card-header d-md-flex justify-content-md-between">
         <div class="pt-1">Meta</div>
-        <a class="btn btn-sm" data-bs-toggle="collapse" href="#person-taxonomy" role="button"
-           aria-expanded="false" aria-controls="collapseExample"></a>
+        <a class="btn btn-sm collapse-button" data-bs-toggle="collapse" href="#person-taxonomy" role="button"
+           aria-expanded="false" aria-controls="collapseExample">
+            <i class="bi bi-plus-lg"></i>
+            <i class="bi bi-dash-lg"></i>
+        </a>
     </div>
     <div class="collapse" id="person-taxonomy">
         <div class="card-body">

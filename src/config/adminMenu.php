@@ -16,10 +16,10 @@ return [
             'placements' => [
                 [
                     'location' => 'left-sidebar',
-                    'group' => 'Актёры',
+                    'group' => 'Person',
                     'groupIcon' => 'bi bi-person-badge',
                     'priority' => 100,
-                    'groupPriority' => 50,
+                    'groupPriority' => 100,
                 ],
             ],
         ],
@@ -37,10 +37,10 @@ return [
             'placements' => [
                 [
                     'location' => 'left-sidebar',
-                    'group' => 'Актёры',
+                    'group' => 'Person',
                     'groupIcon' => 'bi bi-person-badge',
-                    'priority' => 200,
-                    'groupPriority' => 50,
+                    'priority' => 100,
+                    'groupPriority' => 100,
                 ],
             ],
         ],
@@ -58,10 +58,10 @@ return [
             'placements' => [
                 [
                     'location' => 'left-sidebar',
-                    'group' => 'Актёры',
+                    'group' => 'Person',
                     'groupIcon' => 'bi bi-person-badge',
-                    'priority' => 300,
-                    'groupPriority' => 50,
+                    'priority' => 100,
+                    'groupPriority' => 100,
                 ],
             ],
         ],
@@ -79,10 +79,10 @@ return [
             'placements' => [
                 [
                     'location' => 'left-sidebar',
-                    'group' => 'Актёры',
+                    'group' => 'Person',
                     'groupIcon' => 'bi bi-person-badge',
-                    'priority' => 400,
-                    'groupPriority' => 50,
+                    'priority' => 100,
+                    'groupPriority' => 100,
                 ],
             ],
         ],
@@ -100,10 +100,10 @@ return [
             'placements' => [
                 [
                     'location' => 'left-sidebar',
-                    'group' => 'Актёры',
+                    'group' => 'Person',
                     'groupIcon' => 'bi bi-person-badge',
-                    'priority' => 500,
-                    'groupPriority' => 50,
+                    'priority' => 100,
+                    'groupPriority' => 100,
                 ],
             ],
         ],

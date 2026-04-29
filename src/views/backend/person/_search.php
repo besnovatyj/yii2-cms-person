@@ -1,7 +1,7 @@
 <?php
 
 use Besnovatyj\Person\forms\backend\search\PersonSearch;
-use common\widgets\datetime\src\DateTimeRangeWidget;
+use Besnovatyj\DateTime\DateTimeRangeWidget;
 use yii\bootstrap5\ActiveForm;
 use yii\web\View;
 

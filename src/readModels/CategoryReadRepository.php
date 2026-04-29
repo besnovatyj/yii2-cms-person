@@ -3,7 +3,7 @@
 namespace Besnovatyj\Person\readModels;
 
 use Besnovatyj\Person\entities\Category;
-use common\treeModule\TreeQueryScope;
+use Besnovatyj\TreeManager\Manager\TreeQueryScope;
 
 class CategoryReadRepository
 {
@@ -15,7 +15,7 @@ class CategoryReadRepository
     }
 
     public function getRoot(): ?Category
-    {
+    { // TODO - Что за метод? Теперь много корней деревьев
         return Category::find()->andWhere(['depth' => 0])->one();
     }
 

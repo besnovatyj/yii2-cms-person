@@ -58,7 +58,7 @@ $data = GridView::widget([
         [
             'label' => 'Фото',
             'value' => static function (Person $model) {
-                return $model->mainPhoto ? Html::img($model->mainPhoto->getThumbFileUrl('file', 'admin')) : null;
+                return $model->mainPhoto ? Html::img($model->mainPhoto->getThumbUrl('file', 'admin')) : null;
             },
             'format' => 'raw',
             'contentOptions' => ['style' => 'width: 100px', 'data-label' => 'Фото'],
@@ -76,7 +76,7 @@ $data = GridView::widget([
             'value' => function (Person $model) {
                 return $model->birthday;
             },
-            'filter' => \common\widgets\datetime\src\DateTimeRangeWidget::widget([
+            'filter' => \Besnovatyj\DateTime\DateTimeRangeWidget::widget([
                 'model' => $searchModel,
                 'attributeFrom' => 'date_from',
                 'attributeTo' => 'date_to',

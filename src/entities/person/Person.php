@@ -5,9 +5,9 @@ namespace Besnovatyj\Person\entities\person;
 use DateTimeImmutable;
 use Exception;
 use Besnovatyj\Meta\MetaBehavior;
-use common\components\dispatcher\AggregateRoot;
+use Besnovatyj\DomainEvents\AggregateRoot;
 use Besnovatyj\Meta\Meta;
-use common\components\dispatcher\EventTrait;
+use Besnovatyj\DomainEvents\EventTrait;
 use Besnovatyj\Person\entities\Category;
 use Besnovatyj\Person\entities\person\queries\PersonQuery;
 use yii\db\ActiveQuery;
@@ -231,11 +231,11 @@ class Person extends ActiveRecord implements AggregateRoot
     public function attributeLabels(): array
     {
         return [
-            'category_id' => 'Категория, раздел',
+            'category_id' => 'Категория',
             'name' => 'ФИО',
             'birthday' => 'Дата рождения',
             'status' => 'Статус',
-            'created_at' => 'Дата добавления',
+            'created_at' => 'Добавлен',
             'age' => 'Возраст',
         ];
     }

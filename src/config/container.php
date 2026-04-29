@@ -7,10 +7,10 @@ use Besnovatyj\Person\entities\Category;
 use Besnovatyj\Person\repositories\PersonRepository;
 use Besnovatyj\Person\services\manage\PersonVideoService;
 use Besnovatyj\Person\thumbnails\VideoFactory;
-use common\treeModule\entities\Node;
-use common\treeModule\forms\TreeNodeFormInterface;
-use common\treeModule\TreeManager;
-use common\treeModule\TreeQueryScope;
+use Besnovatyj\TreeManager\Manager\entities\Node;
+use Besnovatyj\TreeManager\Manager\forms\TreeNodeFormInterface;
+use Besnovatyj\TreeManager\Manager\TreeManager;
+use Besnovatyj\TreeManager\Manager\TreeQueryScope;
 
 /**
  * Конфигурация DI контейнера для модуля Person

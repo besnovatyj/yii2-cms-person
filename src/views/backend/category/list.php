@@ -21,11 +21,10 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= Html::a('Create Category', ['create'], ['class' => 'btn  btn-success']) ?>
 </p>
 
-<div class="card rounded-0">
+<div class="card">
     <div class="card-header">
-        <h3 class="card-title"><?= $this->title ?></h3>
+        <?= $this->title ?>
     </div>
-    <!-- /.card-header -->
     <div class="card-body">
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
@@ -49,12 +48,13 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]) ?>
     </div>
-    <!-- /.card-body -->
-    <div class="card-footer clearfix">
-        <nav aria-label="" class="nav-pagination">
-            <?= LinkPager::widget([
-                'pagination' => $dataProvider->getPagination(),
-            ]) ?>
-        </nav>
+    <div class="card-footer">
+        <div class="d-grid gap-2">
+            <nav aria-label="" class="nav-pagination">
+                <?= LinkPager::widget([
+                    'pagination' => $dataProvider->getPagination(),
+                ]) ?>
+            </nav>
+        </div>
     </div>
 </div>

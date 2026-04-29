@@ -5,7 +5,7 @@ namespace Besnovatyj\Person\forms\backend\search;
 use Besnovatyj\Person\entities\Category;
 use Besnovatyj\Person\entities\person\Person;
 use Besnovatyj\Person\helpers\PersonHelper;
-use common\treeModule\TreeQueryScope;
+use Besnovatyj\TreeManager\Manager\TreeQueryScope;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 

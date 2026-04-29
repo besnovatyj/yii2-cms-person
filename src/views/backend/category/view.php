@@ -22,9 +22,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="row">
     <div class="col-12 col-md-6">
-        <div class="card rounded-0">
+        <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Common</h3>
+                Common
             </div>
             <div class="card-body">
                 <?= DetailView::widget([
@@ -42,9 +42,9 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
     <div class="col-12 col-md-6">
-        <div class="card rounded-0">
+        <div class="card">
             <div class="card-header">
-                <h3 class="card-title">SEO</h3>
+                SEO
             </div>
             <div class="card-body">
                 <?= DetailView::widget([
@@ -61,9 +61,9 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 </div>
 
-<div class="card rounded-0">
+<div class="card">
     <div class="card-header">
-        <h3 class="card-title">Description</h3>
+        Description
     </div>
     <div class="card-body">
         <?= Yii::$app->formatter->asHtml($category->description, [
@@ -77,9 +77,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="card-footer clearfix"></div>
 </div>
 
-<div class="card rounded-0">
+<div class="card">
     <div class="card-header">
-        <h3 class="card-title">Актёры в категории</h3>
+        Актёры в категории
     </div>
     <div class="card-body">
         <?= GridView::widget([
@@ -90,7 +90,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 [
                     'label' => 'Фото',
                     'value' => static function (Person $model) {
-                        return $model->mainPhoto ? Html::img($model->mainPhoto->getThumbFileUrl('file', 'admin')) : null;
+                        return $model->mainPhoto ? Html::img($model->mainPhoto->getThumbUrl('file', 'admin')) : null;
                     },
                     'format' => 'raw',
                     'contentOptions' => ['style' => 'width: 100px'],
