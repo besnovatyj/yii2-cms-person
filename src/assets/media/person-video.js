@@ -136,7 +136,7 @@ function initVideoManager(grid) {
                 showAddError(result.message || 'Неизвестная ошибка.');
             }
         } catch (err) {
-            showAddError('Ошибка сети: ' + err.message);
+            showAddError(err.message);
         } finally {
             addLoading.style.display = 'none';
             addBtn.disabled = false;
@@ -159,7 +159,7 @@ function initVideoManager(grid) {
                 alert(result.message || 'Ошибка удаления.');
             }
         } catch (err) {
-            alert('Ошибка сети: ' + err.message);
+            alert(err.message);
         }
     }
 
@@ -191,7 +191,7 @@ function initVideoManager(grid) {
                 overlay.className = 'video-status-overlay error';
             }
         } catch (err) {
-            overlay.textContent = 'Ошибка сети';
+            overlay.textContent = err.message;
             overlay.className = 'video-status-overlay error';
         }
 
@@ -226,7 +226,7 @@ function initVideoManager(grid) {
                 overlay.className = 'video-status-overlay error';
             }
         } catch (err) {
-            overlay.textContent = 'Ошибка сети';
+            overlay.textContent = err.message;
             overlay.className = 'video-status-overlay error';
         }
 
@@ -338,6 +338,10 @@ function initVideoManager(grid) {
      */
     function openVideoPreview(iframeUrl, iframeAllow, iframeReferrerPolicy) {
         var iframe = document.getElementById('video-preview-iframe');
+        if (!iframe) {
+            alert('Элемент iframe#video-preview-iframe не найден — возможно, расширение браузера удалило его.');
+            return;
+        }
 
         // Устанавливаем атрибуты iframe из данных провайдера
         if (iframeAllow) {
@@ -418,9 +422,35 @@ function initTestParse(testBtn) {
     const loading = document.getElementById('test-parse-loading');
     const errorBlock = document.getElementById('test-parse-error');
     const resultBlock = document.getElementById('test-parse-result');
+    const thumbnailImg = document.getElementById('test-result-thumbnail');
+    const thumbnailUrlCode = document.getElementById('test-result-thumbnail-url');
+    const iframeUrlCode = document.getElementById('test-result-iframe-url');
     const endpoint = testBtn.dataset.endpoint;
     const csrfParam = testBtn.dataset.csrfParam;
     const csrfToken = testBtn.dataset.csrfToken;
+
+    /**
+     * Возвращает актуальный iframe-элемент.
+     * Пересоздаёт его, если расширение браузера (напр. Privacy Badger) подменило оригинал.
+     */
+    function getOrRestoreIframe() {
+        var existing = document.getElementById('test-result-iframe');
+        if (existing) {
+            return existing;
+        }
+        var container = resultBlock.querySelector('.ratio');
+        if (!container) {
+            return null;
+        }
+        container.innerHTML = '';
+        var iframe = document.createElement('iframe');
+        iframe.id = 'test-result-iframe';
+        iframe.setAttribute('frameborder', '0');
+        iframe.setAttribute('allowfullscreen', '');
+        iframe.setAttribute('allow', 'autoplay; encrypted-media');
+        container.appendChild(iframe);
+        return iframe;
+    }
 
     testBtn.addEventListener('click', function () {
         const url = urlInput.value.trim();
@@ -440,25 +470,53 @@ function initTestParse(testBtn) {
         loading.style.display = '';
         testBtn.disabled = true;
 
+        var result;
         try {
-            const result = await postJson(endpoint, { url: url }, csrfParam, csrfToken);
-
-            if (result.status === 'success') {
-                document.getElementById('test-result-thumbnail').src = result.data.thumbnail_url;
-                document.getElementById('test-result-thumbnail-url').textContent = result.data.thumbnail_url;
-                document.getElementById('test-result-iframe').src = result.data.iframe_url;
-                document.getElementById('test-result-iframe-url').textContent = result.data.iframe_url;
-                resultBlock.style.display = '';
-            } else {
-                errorBlock.textContent = result.message || 'Неизвестная ошибка.';
-                errorBlock.style.display = '';
-            }
+            result = await postJson(endpoint, { url: url }, csrfParam, csrfToken);
         } catch (err) {
-            errorBlock.textContent = 'Ошибка сети: ' + err.message;
+            errorBlock.textContent = err.message;
             errorBlock.style.display = '';
-        } finally {
             loading.style.display = 'none';
             testBtn.disabled = false;
+            return;
+        }
+
+        loading.style.display = 'none';
+        testBtn.disabled = false;
+
+        if (result.status !== 'success') {
+            errorBlock.textContent = 'Ошибка сервера: ' + (result.message || 'Неизвестная ошибка.');
+            errorBlock.style.display = '';
+            return;
+        }
+
+        // Отображение результата — ошибки здесь не связаны с сетью
+        var warnings = [];
+
+        if (thumbnailImg) {
+            thumbnailImg.src = result.data.thumbnail_url;
+        } else {
+            warnings.push('Элемент превью (img#test-result-thumbnail) не найден в DOM');
+        }
+        if (thumbnailUrlCode) {
+            thumbnailUrlCode.textContent = result.data.thumbnail_url;
+        }
+
+        var iframe = getOrRestoreIframe();
+        if (iframe) {
+            iframe.src = result.data.iframe_url;
+        } else {
+            warnings.push('Не удалось создать iframe — возможно, расширение браузера блокирует встраивание');
+        }
+        if (iframeUrlCode) {
+            iframeUrlCode.textContent = result.data.iframe_url;
+        }
+
+        resultBlock.style.display = '';
+
+        if (warnings.length > 0) {
+            errorBlock.textContent = 'Данные получены, но: ' + warnings.join('; ');
+            errorBlock.style.display = '';
         }
     }
 }
@@ -484,16 +542,29 @@ async function postJson(url, data, csrfParam, csrfToken) {
         }
     }
 
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'X-Requested-With-Fetch': 'true',
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: params.toString(),
-    });
+    var response;
+    try {
+        response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With-Fetch': 'true',
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: params.toString(),
+        });
+    } catch (err) {
+        throw new Error('Сеть недоступна или запрос заблокирован: ' + err.message);
+    }
 
-    return await response.json();
+    if (!response.ok) {
+        throw new Error('HTTP ' + response.status + ' ' + response.statusText + ' (' + url + ')');
+    }
+
+    try {
+        return await response.json();
+    } catch (err) {
+        throw new Error('Сервер вернул не-JSON ответ (HTTP ' + response.status + '): ' + err.message);
+    }
 }
 
 /**
