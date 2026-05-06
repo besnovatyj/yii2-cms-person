@@ -11,6 +11,7 @@ use Besnovatyj\Person\thumbnails\VideoFactory;
 use DomainException;
 use RuntimeException;
 use Yii;
+use yii\db\Exception;
 use yii\db\Expression;
 
 /**
@@ -125,6 +126,7 @@ class PersonVideoService
      * Обновляет предвычисленные данные видеоролика (перепарсивает source_url).
      *
      * @throws DomainException если URL больше не распознаётся
+     * @throws Exception шибка сохранения в БД
      */
     public function refreshVideo(int $videoId): PersonVideo
     {

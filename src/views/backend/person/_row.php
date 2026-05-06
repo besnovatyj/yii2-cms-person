@@ -26,7 +26,7 @@ use yii\web\View;
     <td data-label="Дата рождения">
         <?= $model->birthday ? \Yii::$app->formatter->asDate($model->birthday) : '' ?>
     </td>
-    <td data-label="Категория, раздел">
+    <td data-label="Категория">
         <?= Html::encode($model->category->name ?? '') ?>
     </td>
     <td data-label="Статус">

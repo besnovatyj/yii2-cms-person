@@ -43,10 +43,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     'toggleStatus' => Url::to(['/Person/backend/category/toggle-status']),
                     'checkIntegrity' => Url::to(['/Person/backend/category/check-integrity']),
                 ],
-                'forms' => [
-                    'createFormClass' => CategoryForm::class,
-                    'updateFormClass' => CategoryForm::class,
-                ],
+//                'forms' => [
+//                    'createFormClass' => CategoryForm::class,
+//                    'updateFormClass' => CategoryForm::class,
+//                ],
                 'serverForms' => [
                     'enabled' => true,
                     'display' => 'modal',

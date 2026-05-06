@@ -30,16 +30,16 @@ class  CategoryHelper
     {
         switch ($model->status) {
             case Category::STATUS_DRAFT:
-                $class = 'badge rounded-0 bg-secondary float-right';
+                $class = 'badge bg-secondary float-right';
                 $action = 'activate';
                 break;
             case Category::STATUS_ACTIVE:
-                $class = 'badge rounded-0 bg-success float-right';
+                $class = 'badge bg-success float-right';
                 $action = 'draft';
                 break;
 
             default:
-                $class = 'badge rounded-0 bg-default float-right';
+                $class = 'badge bg-default float-right';
                 $action = 'activate';
         }
 
