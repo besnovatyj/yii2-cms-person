@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Besnovatyj\Person\thumbnails\providers;
 
 use Besnovatyj\Person\thumbnails\VideoData;
+use RuntimeException;
 
 /**
  * Базовый класс провайдера видео.
@@ -77,7 +78,7 @@ abstract class AbstractProvider
      * @param string $url
      * @param array<string, string> $headers Дополнительные заголовки вида ['Header-Name' => 'value']
      * @return string Тело ответа
-     * @throws \RuntimeException при ошибке cURL или не-200 HTTP-статусе
+     * @throws RuntimeException при ошибке cURL или не-200 HTTP-статусе
      */
     protected function curlGet(string $url, array $headers = []): string
     {
@@ -103,10 +104,10 @@ abstract class AbstractProvider
         curl_close($ch);
 
         if ($errno !== 0) {
-            throw new \RuntimeException("cURL error $errno: $error");
+            throw new RuntimeException("cURL error $errno: $error");
         }
         if ($httpCode !== 200) {
-            throw new \RuntimeException("HTTP $httpCode for $url");
+            throw new RuntimeException("HTTP $httpCode for $url");
         }
 
         return (string)$response;

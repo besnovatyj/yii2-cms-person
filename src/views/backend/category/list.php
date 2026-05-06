@@ -2,8 +2,8 @@
 
 use Besnovatyj\Person\entities\Category;
 use Besnovatyj\Person\forms\backend\search\CategorySearch;
-use backend\widgets\grid\ActionColumn;
-use yii\bootstrap5\LinkPager;
+use Besnovatyj\Backend\Widgets\grid\ActionColumn;
+use Besnovatyj\Backend\Widgets\pagination\LinkPager;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;

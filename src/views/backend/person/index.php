@@ -1,9 +1,10 @@
 <?php
 
+use Besnovatyj\Backend\Widgets\grid\ActionColumn;
 use Besnovatyj\Person\entities\person\Person;
 use Besnovatyj\Person\forms\backend\search\PersonSearch;
 use Besnovatyj\Person\helpers\PersonHelper;
-use yii\bootstrap5\LinkPager;
+use Besnovatyj\Backend\Widgets\pagination\LinkPager;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
@@ -110,7 +111,7 @@ $data = GridView::widget([
             'contentOptions' => ['data-label' => 'Видео'],
         ],
         [
-            'class' => '\backend\widgets\grid\ActionColumn',
+            'class' => ActionColumn::class,
             'template' => '{view} {update} {mark-for-deletion}',
             'buttons' => [
                 'view' => static function (string $url, Person $model): string {

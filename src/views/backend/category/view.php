@@ -9,7 +9,7 @@ use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\DetailView;
-use yii\bootstrap5\LinkPager;
+use Besnovatyj\Backend\Widgets\pagination\LinkPager;
 
 /* @var $this View */
 /* @var $category Category */
