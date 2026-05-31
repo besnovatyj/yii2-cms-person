@@ -1,5 +1,10 @@
 <?php
 
+
+/*
+ * Copyright (c) 2026 Besnovatyj. Licensed under the MIT License.
+ */
+
 use Besnovatyj\TreeManager\Manager\TreeDataSource;
 use Besnovatyj\TreeManager\Manager\TreeWidget;
 use Besnovatyj\Person\forms\backend\CategoryForm;

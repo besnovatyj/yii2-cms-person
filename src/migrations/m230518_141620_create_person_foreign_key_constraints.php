@@ -1,5 +1,10 @@
 <?php
 
+
+/*
+ * Copyright (c) 2026 Besnovatyj. Licensed under the MIT License.
+ */
+
 use Besnovatyj\Person\migrations\m230518_141550_create_person_persons_table;
 use Besnovatyj\Person\migrations\m230518_141560_create_person_photos_table;
 use Besnovatyj\Person\migrations\m230518_141610_create_person_videos_table;

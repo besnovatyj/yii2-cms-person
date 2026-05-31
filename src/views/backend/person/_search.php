@@ -1,5 +1,10 @@
 <?php
 
+
+/*
+ * Copyright (c) 2026 Besnovatyj. Licensed under the MIT License.
+ */
+
 use Besnovatyj\Person\forms\backend\search\PersonSearch;
 use Besnovatyj\DateTime\DateTimeRangeWidget;
 use yii\bootstrap5\ActiveForm;

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2026 Besnovatyj. Licensed under the MIT License.
+ */
+
 // Добавляет CSRF-токен Yii2 ко всем htmx POST-запросам.
 // Yii2 регистрирует <meta name="csrf-token"> через layout автоматически.
 document.addEventListener('htmx:configRequest', function (evt) {

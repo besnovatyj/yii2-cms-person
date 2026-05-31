@@ -31,6 +31,10 @@
   },
   "require": {
     "php": ">=8.4",
+    "ext-curl": "*",
+    "ext-dom": "*",
+    "ext-libxml": "*",
+    "ext-simplexml": "*",
     "yiisoft/yii2": "~2.0.0",
     "yiisoft/yii2-bootstrap5": "~2.0.0",
     "besnovatyj/yii2-cms-meta": "1.0.0",

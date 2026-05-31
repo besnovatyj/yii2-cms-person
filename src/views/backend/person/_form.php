@@ -1,5 +1,10 @@
 <?php
 
+
+/*
+ * Copyright (c) 2026 Besnovatyj. Licensed under the MIT License.
+ */
+
 use Besnovatyj\File\widgets\customeditor\src\CkeditorCustomWidget;
 use Besnovatyj\Person\forms\backend\person\PersonForm;
 use Besnovatyj\Person\entities\person\Person;

@@ -1,5 +1,10 @@
 <?php
 
+
+/*
+ * Copyright (c) 2026 Besnovatyj. Licensed under the MIT License.
+ */
+
 use Besnovatyj\Images\widgets\upload\Widget;
 use Besnovatyj\Person\entities\person\Person;
 use Besnovatyj\Person\helpers\PersonHelper;
