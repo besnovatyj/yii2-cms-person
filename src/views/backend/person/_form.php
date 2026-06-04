@@ -5,10 +5,10 @@
  * Copyright (c) 2026 Besnovatyj. Licensed under the MIT License.
  */
 
-use Besnovatyj\File\widgets\customeditor\src\CkeditorCustomWidget;
-use Besnovatyj\Person\forms\backend\person\PersonForm;
-use Besnovatyj\Person\entities\person\Person;
 use Besnovatyj\DateTime\DateTimeWidget;
+use Besnovatyj\File\widgets\CkeditorCustomWidget;
+use Besnovatyj\Person\entities\person\Person;
+use Besnovatyj\Person\forms\backend\person\PersonForm;
 use yii\bootstrap5\ActiveForm;
 use yii\helpers\Html;
 use yii\web\View;
