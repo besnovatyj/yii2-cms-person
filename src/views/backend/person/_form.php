@@ -73,7 +73,7 @@ use yii\web\View;
                     // TODO создавать папку при создании актёра. При удалении удалять.
                     $editorConfig = [];
                     $editorConfig['language'] = 'ru';
-                    $editorConfig['fmDefaultPath'] = '/origin/Person/' . $person->id;
+                    $editorConfig['fmDefaultPath'] = '/static/origin/Person/' . $person->id;
                     echo $form->field($model, 'description')->widget(CkeditorCustomWidget::class, $editorConfig)->label(false);
                 }
                 ?>
