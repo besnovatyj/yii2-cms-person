@@ -38,7 +38,8 @@
     "yiisoft/yii2": "~2.0.0",
     "yiisoft/yii2-bootstrap5": "~2.0.0",
     "besnovatyj/yii2-cms-meta": "1.0.0",
-    "besnovatyj/yii2-cms-images": "1.0.0"
+    "besnovatyj/yii2-cms-images": "1.0.0",
+    "besnovatyj/yii2-nested-sets": "1.0.0"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest"
