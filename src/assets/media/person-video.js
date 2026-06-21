@@ -551,7 +551,7 @@ async function postJson(url, data, csrfParam, csrfToken) {
         response = await fetch(url, {
             method: 'POST',
             headers: {
-                'X-Requested-With-Fetch': 'true',
+                'X-Requested-With': 'XMLHttpRequest',
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: params.toString(),
