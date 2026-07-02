@@ -7,7 +7,7 @@
 
 namespace Besnovatyj\Person\migrations;
 
-use common\components\migration\BaseMigration;
+use Besnovatyj\Kernel\migration\BaseMigration;
 
 /** 'm<YYMMDD_HHMMSS>_<Name>' */
 class m230518_141550_create_person_persons_table extends BaseMigration

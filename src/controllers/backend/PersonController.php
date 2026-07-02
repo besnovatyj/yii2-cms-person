@@ -19,7 +19,7 @@ use Besnovatyj\Person\repositories\NotFoundException;
 use Besnovatyj\Person\repositories\PersonRepository;
 use Besnovatyj\Person\services\manage\PersonManageService;
 use common\components\controller\ControllerTrait;
-use common\components\urlmanager\UrlManagerHelperTrait;
+use Besnovatyj\Kernel\urlmanager\UrlManagerHelperTrait;
 use Throwable;
 use Yii;
 use yii\base\InvalidConfigException;

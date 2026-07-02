@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Besnovatyj\Person\migrations;
 
-use common\components\migration\BaseMigration;
+use Besnovatyj\Kernel\migration\BaseMigration;
 
 /**
  * Удаляет колонку videos_json из таблицы person_persons.

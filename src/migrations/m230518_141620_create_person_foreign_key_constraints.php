@@ -8,7 +8,7 @@
 use Besnovatyj\Person\migrations\m230518_141550_create_person_persons_table;
 use Besnovatyj\Person\migrations\m230518_141560_create_person_photos_table;
 use Besnovatyj\Person\migrations\m230518_141610_create_person_videos_table;
-use common\components\migration\BaseMigration;
+use Besnovatyj\Kernel\migration\BaseMigration;
 
 class m230518_141620_create_person_foreign_key_constraints extends BaseMigration
 {
@@ -48,9 +48,9 @@ class m230518_141620_create_person_foreign_key_constraints extends BaseMigration
     public function safeDown(): void
     {
         // Отменяем действия по умолчанию,
-        // так как \common\components\migration\BaseMigration::safeDown() вызывает static::TABLE_NAME,
+        // так как \Besnovatyj\Kernel\migration\BaseMigration::safeDown() вызывает static::TABLE_NAME,
         // которого в данной миграции не существует.
-        // Так же, \common\components\migration\BaseMigration::safeDown() при удалении таблиц сам удалит у них все индексы и внешние ключи.
+        // Так же, \Besnovatyj\Kernel\migration\BaseMigration::safeDown() при удалении таблиц сам удалит у них все индексы и внешние ключи.
 
         // parent::safeDown();
     }

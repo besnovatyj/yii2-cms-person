@@ -11,7 +11,7 @@ namespace Besnovatyj\Person\migrations;
 
 use Besnovatyj\Person\entities\person\PersonVideo;
 use Besnovatyj\Person\thumbnails\VideoFactory;
-use common\components\migration\BaseMigration;
+use Besnovatyj\Kernel\migration\BaseMigration;
 use Yii;
 
 /**
