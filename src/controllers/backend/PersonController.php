@@ -18,7 +18,7 @@ use Besnovatyj\Person\image\PersonImageOwner;
 use Besnovatyj\Person\repositories\NotFoundException;
 use Besnovatyj\Person\repositories\PersonRepository;
 use Besnovatyj\Person\services\manage\PersonManageService;
-use common\components\controller\ControllerTrait;
+use Besnovatyj\Kernel\controller\ControllerTrait;
 use Besnovatyj\Kernel\urlmanager\UrlManagerHelperTrait;
 use Throwable;
 use Yii;

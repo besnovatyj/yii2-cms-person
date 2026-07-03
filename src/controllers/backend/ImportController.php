@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Besnovatyj\Person\controllers\backend;
 
 use Besnovatyj\Person\services\import\ImportService;
-use common\components\controller\ControllerTrait;
+use Besnovatyj\Kernel\controller\ControllerTrait;
 use Throwable;
 use Yii;
 use yii\filters\VerbFilter;
