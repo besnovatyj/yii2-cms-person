@@ -6,7 +6,7 @@
  */
 
 use Besnovatyj\DateTime\DateTimeWidget;
-use Besnovatyj\File\widgets\CkeditorCustomWidget;
+use Besnovatyj\Editor\EditorWidget;
 use Besnovatyj\Person\entities\person\Person;
 use Besnovatyj\Person\forms\backend\person\PersonForm;
 use yii\bootstrap5\ActiveForm;
@@ -74,7 +74,7 @@ use yii\web\View;
                     $editorConfig = [];
                     $editorConfig['language'] = 'ru';
                     $editorConfig['fmDefaultPath'] = '/static/origin/Person/' . $person->id;
-                    echo $form->field($model, 'description')->widget(CkeditorCustomWidget::class, $editorConfig)->label(false);
+                    echo $form->field($model, 'description')->widget(EditorWidget::class, $editorConfig)->label(false);
                 }
                 ?>
             </div>
