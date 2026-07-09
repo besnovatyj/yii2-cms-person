@@ -1,7 +1,5 @@
 <?php
 
-
-
 /*
  * Copyright (c) 2026 Besnovatyj. Licensed under the MIT License.
  */
@@ -12,6 +10,7 @@ use Besnovatyj\Person\helpers\PersonHelper;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\web\View;
 use yii\widgets\DetailView;
 use Besnovatyj\Backend\Widgets\pagination\LinkPager;
@@ -19,11 +18,22 @@ use Besnovatyj\Backend\Widgets\pagination\LinkPager;
 /* @var $this View */
 /* @var $category Category */
 /* @var $dataProvider ActiveDataProvider */
+/* @var $absoluteFrontendUrl string */
+/* @var $frontendUrl string */
 
 $this->title = $category->name;
 $this->params['breadcrumbs'][] = ['label' => 'Categories', 'url' => ['list']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+
+<div class="d-flex gap-2 mb-3 flex-wrap">
+    <!-- Добавить в меню -->
+    <?= \Besnovatyj\Menu\widgets\add\AddItemWidget::widget([
+        'endpoint' => Url::to('/Menu/backend/widget/create', true),
+        'link'     => $frontendUrl,
+        'name'     => $this->title,
+    ]) ?>
+</div>
 
 <div class="row">
     <div class="col-12 col-md-6">

@@ -7,6 +7,7 @@
 
 namespace Besnovatyj\Person\controllers\backend;
 
+use Besnovatyj\Kernel\urlmanager\UrlManagerHelperTrait;
 use Besnovatyj\Person\entities\Category;
 use Besnovatyj\Person\forms\backend\CategoryForm;
 use Besnovatyj\Person\forms\backend\search\CategorySearch;
@@ -23,6 +24,8 @@ use yii\web\Response;
 
 class CategoryController extends TreeController
 {
+    use UrlManagerHelperTrait;
+
     private CategoryRepository $categoryRepo;
     private PersonRepository $personRepo;
 
@@ -85,11 +88,16 @@ class CategoryController extends TreeController
             throw new NotFoundHttpException('The requested page does not exist.');
         }
 
+        $absoluteFrontendUrl = $this->getAbsoluteFrontendRoute('/Person/person/category/', ['slug' => $category->slug]);
+        $frontendUrl         = $this->getFrontendRoute('/Person/person/category/', ['slug' => $category->slug]);
+
         $dataProvider = $this->personRepo->getAllByCategory($category);
 
         return $this->render('view', [
-            'category' => $category,
-            'dataProvider' => $dataProvider,
+            'category'              => $category,
+            'dataProvider'          => $dataProvider,
+            'absoluteFrontendUrl'   => $absoluteFrontendUrl,
+            'frontendUrl'           => $frontendUrl,
         ]);
     }
 
