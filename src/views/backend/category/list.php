@@ -48,7 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'status',
                 'sort_order',
                 ['class' => ActionColumn::class,
-                    'template' => \Besnovatyj\User\components\Helper::filterActionColumn(['view',]),
+                    'template' => \Besnovatyj\Kernel\security\AccessHelper::filterActionColumn(['view',]),
                 ],
             ],
         ]) ?>
