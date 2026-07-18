@@ -164,6 +164,9 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="card-body">
                 <?= Widget::widget([
                     'ownerId' => $person->id,
+                    // Способ отображения превью управляется через модуль настроек yii2-cms-config
+                    // (опция объявлена в config/options.php, дефолт — в config/config.php).
+                    'previewFit' => Yii::$app->getModule('Person')->params['previewFit'] ?? Widget::PREVIEW_FIT_COVER,
                     'endpoints' => [
                         'getImages' => Url::to(['/Person/backend/person/get-images'], true),
                         'setNewSort' => Url::to(['/Person/backend/person/set-new-sort'], true),
