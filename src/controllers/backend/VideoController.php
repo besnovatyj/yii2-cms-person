@@ -181,7 +181,7 @@ class VideoController extends Controller
     /**
      * Обновляет предвычисленные данные видеоролика (AJAX).
      */
-    public function actiongoReferer(): array
+    public function actionRefresh(): array
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
