@@ -20,6 +20,8 @@ class VkProvider extends AbstractProvider
         '#(//(?:www\.)?vk\.ru/video_ext\.php\?oid=\-?[0-9]+(?:&|&\#038;|&amp;)id=\-?[0-9]+(?:&|&\#038;|&amp;)hash=[0-9a-zA-Z]+)#i',
         // https://vk.ru/video-26052787_456239576
         '#(//(?:www\.)?vk\.ru/video\-?[0-9_]+)#i',
+        // https://vk.ru/clip-211352495_456239182
+        '#(//(?:www\.)?vk\.ru/clip\-?[0-9_]+)#i',
     ];
 
     /**
