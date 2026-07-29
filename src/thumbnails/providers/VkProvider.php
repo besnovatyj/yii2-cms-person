@@ -16,10 +16,10 @@ class VkProvider extends AbstractProvider
     protected const string HOST = 'vk';
 
     protected array $regexes = [
-        // //vk.com/video_ext.php?oid=-26052787&id=456239576&hash=12661f74200a6f7a - должно получиться это (запрашиваем страницу и парсим thumbnail)
-        '#(//(?:www\.)?vk\.com/video_ext\.php\?oid=\-?[0-9]+(?:&|&\#038;|&amp;)id=\-?[0-9]+(?:&|&\#038;|&amp;)hash=[0-9a-zA-Z]+)#i',
-        // https://vk.com/video-26052787_456239576
-        '#(//(?:www\.)?vk\.com/video\-?[0-9_]+)#i',
+        // //vk.ru/video_ext.php?oid=-26052787&id=456239576&hash=12661f74200a6f7a - должно получиться это (запрашиваем страницу и парсим thumbnail)
+        '#(//(?:www\.)?vk\.ru/video_ext\.php\?oid=\-?[0-9]+(?:&|&\#038;|&amp;)id=\-?[0-9]+(?:&|&\#038;|&amp;)hash=[0-9a-zA-Z]+)#i',
+        // https://vk.ru/video-26052787_456239576
+        '#(//(?:www\.)?vk\.ru/video\-?[0-9_]+)#i',
     ];
 
     /**
