@@ -173,6 +173,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         'upload' => Url::to(['/Person/backend/person/add-image'], true),
                         'deleteImage' => Url::to(['/Person/backend/person/delete-image'], true),
                         'setMainImage' => Url::to(['/Person/backend/person/set-main-image'], true),
+                        'maxWidth'   => 7000, // максимальная ширина изображения в пикселях
+                        'maxHeight'  => 7000, // максимальная высота изображения в пикселях
                     ],
                 ]) ?>
             </div>
