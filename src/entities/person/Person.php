@@ -10,6 +10,7 @@ namespace Besnovatyj\Person\entities\person;
 use DateTimeImmutable;
 use Exception;
 use Besnovatyj\Meta\MetaBehavior;
+use Besnovatyj\PessimisticLock\PessimisticLockBehavior;
 use Besnovatyj\DomainEvents\AggregateRoot;
 use Besnovatyj\Meta\Meta;
 use Besnovatyj\DomainEvents\EventTrait;
@@ -32,6 +33,8 @@ use yii\db\ActiveRecord;
  * @property Photo $mainPhoto
  * @property Photo[] $photos
  * @property PersonVideo[] $videos
+ *
+ * @mixin PessimisticLockBehavior
  */
 class Person extends ActiveRecord implements AggregateRoot
 {
@@ -200,6 +203,7 @@ class Person extends ActiveRecord implements AggregateRoot
     {
         return [
             MetaBehavior::class,
+            PessimisticLockBehavior::class,
         ];
     }
 

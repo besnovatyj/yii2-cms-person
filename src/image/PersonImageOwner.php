@@ -11,7 +11,6 @@ namespace Besnovatyj\Person\image;
 
 use Besnovatyj\Images\base\BaseImage;
 use Besnovatyj\Images\contracts\ImageOwnerInterface;
-use Besnovatyj\Images\contracts\NullImageOwnerTrait;
 use Besnovatyj\Person\entities\person\Person;
 use Besnovatyj\Person\entities\person\Photo;
 use Besnovatyj\Person\repositories\PersonRepository;
@@ -20,13 +19,15 @@ use yii\db\Exception;
 /**
  * Адаптер Person к ImageOwnerInterface.
  *
- * Использует NullImageOwnerTrait — у Person нет необходимости в pessimistic lock,
- * так как фотографии загружаются по одной и отсутствует гонка за main_photo_id.
+ * Реализует pessimistic lock через PessimisticLockBehavior Person,
+ * чтобы исключить race condition при параллельной загрузке фотографий:
+ * виджет грузит файлы пачками (по несколько параллельных запросов), и без
+ * блокировки несколько запросов одновременно видят main_photo_id = null и
+ * пытаются его установить, что приводит к взаимной блокировке (deadlock) и
+ * падению части файлов из пачки.
  */
 class PersonImageOwner implements ImageOwnerInterface
 {
-    use NullImageOwnerTrait;
-
     public function __construct(
         private readonly Person           $person,
         private readonly PersonRepository $repository,
@@ -74,5 +75,25 @@ class PersonImageOwner implements ImageOwnerInterface
     public function saveOwner(): void
     {
         $this->repository->save($this->person);
+    }
+
+    /**
+     * Блокирует строку персоны (SELECT FOR UPDATE) до конца транзакции.
+     *
+     * Исключает race condition при параллельной загрузке нескольких файлов.
+     *
+     * @throws Exception
+     */
+    public function lockOwner(): void
+    {
+        $this->person->lock();
+    }
+
+    /**
+     * Обновляет данные персоны из БД после применения блокировки.
+     */
+    public function refreshOwner(): void
+    {
+        $this->person->refresh();
     }
 }

@@ -46,7 +46,8 @@
     "besnovatyj/yii2-cms-meta": "^1.0",
     "besnovatyj/yii2-cms-images": "^1.0",
     "besnovatyj/yii2-nested-sets": "^1.1",
-    "besnovatyj/yii2-cms-editor": "^1.0"
+    "besnovatyj/yii2-cms-editor": "^1.0",
+    "besnovatyj/yii2-cms-pessimistic-lock-behavior": "^1.0"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest"
