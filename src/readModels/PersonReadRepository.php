@@ -33,7 +33,7 @@ class PersonReadRepository
      */
     public function countByAge(int $ageItem): int
     {
-        $query = Person::find()->active();
+        $query = Person::find()->visible();
 
         if ($ageItem >= 0) {
             // 'today' без компонента времени — результат не зависит от секунды выполнения
@@ -51,31 +51,31 @@ class PersonReadRepository
     public function getAll(): DataProviderInterface
     {
         // Индексная страница, пока не реализована
-        $query = Person::find()->alias('p')->active('p')->with('mainPhoto');
+        $query = Person::find()->alias('p')->visible('p')->with('mainPhoto');
         return $this->getProvider($query);
     }
 
     public function getAllByCategory(Category $category): DataProviderInterface
     {
-        $query = Person::find()->alias('p')->active('p')->with('mainPhoto', 'category');
+        $query = Person::find()->alias('p')->visible('p')->with('mainPhoto', 'category');
         $ids = $this->treeScope->descendantIds($category, andSelf: true);
         $query->andWhere(['p.category_id' => $ids]);
         $query->groupBy('p.id');
         return $this->getProvider($query);
     }
 
+    /**
+     * Конкретная персона для фронтенда — только доступная анонимному посетителю.
+     *
+     * Прежний join по `c.status` проверял лишь непосредственный раздел; {@see PersonQuery::visible()}
+     * проверяет всю цепочку предков, поэтому персона из ветки, скрытой на верхнем уровне, больше
+     * не открывается по прямой ссылке. Join и groupBy стали не нужны.
+     */
     public function find($id): ?Person
     {
-        // Конкретный актёр
-        // andWhere( person.category=active )
-        $query = Person::find()->alias('p')->active('p');
-        $query->joinWith(['category c'], false);
-        $query->andWhere(['and', ['p.id' => $id], ['c.status' => Category::STATUS_ACTIVE]]);
-        $query->groupBy('p.id');
         /** @var $person Person */
-        $person = $query->one();
+        $person = Person::find()->alias('p')->visible('p')->andWhere(['p.id' => $id])->one();
         return $person;
-//        return Person::find()->alias('p')->active('p')->andWhere(['id' => $id])->one();
     }
 
     /**
@@ -136,10 +136,10 @@ class PersonReadRepository
     public function search(SearchForm $form): DataProviderInterface
     {
         // Страница поиска
-        $query = Person::find()->alias('p')->active('p')->with('mainPhoto', 'category');
+        $query = Person::find()->alias('p')->visible('p')->with('mainPhoto', 'category');
 
         if ($form->category) {
-            $category = Category::find()->active()->andWhere(['id' => $form->category])->one();
+            $category = Category::find()->visible()->andWhere(['id' => $form->category])->one();
             if ($category) {
                 $ids = $this->treeScope->descendantIds($category, andSelf: true);
                 $query->andWhere(['p.category_id' => $ids]);
@@ -164,11 +164,8 @@ class PersonReadRepository
             ]);
         }
 
-        // andWhere( person.category=active )
-        $query->joinWith(['category c'], false);
-        $query->andWhere(['c.status' => Category::STATUS_ACTIVE]);
-
-        $query->groupBy('p.id'); // При join надо группировать, чтобы не было повторов
+        // Раздел персоны проверяет `visible()` выше — вместе со всей цепочкой предков,
+        // поэтому отдельный join по `c.status` больше не нужен (а с ним и groupBy от его повторов).
 
 //        var_dump($query->prepare(\Yii::$app->db->queryBuilder)->createCommand()->rawSql); exit();
 

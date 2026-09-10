@@ -20,9 +20,13 @@ class CategoryReadRepository
         $this->treeScope = new TreeQueryScope(Category::class);
     }
 
+    /**
+     * Корневой раздел дерева — только видимый: корень такой же полноценный раздел, как
+     * остальные, и снятый с публикации показываться не должен.
+     */
     public function getRoot(): ?Category
     { // TODO - Что за метод? Теперь много корней деревьев
-        return Category::find()->andWhere(['depth' => 0])->one();
+        return Category::find()->visible()->andWhere(['depth' => 0])->one();
     }
 
     /**
@@ -30,7 +34,7 @@ class CategoryReadRepository
      */
     public function getRoots(): array
     {
-        return $this->treeScope->rootsQuery()->all();
+        return $this->treeScope->rootsQuery()->visible()->all();
     }
 
     /**
@@ -38,22 +42,26 @@ class CategoryReadRepository
      */
     public function getAll(): array
     {
-        return Category::find()->orderBy('lft')->all();
+        return Category::find()->visible()->orderBy('lft')->all();
     }
 
     public function find($id): ?Category
     {
-        return Category::find()->andWhere(['id' => $id])->one();
+        return Category::find()->visible()->andWhere(['id' => $id])->one();
     }
 
+    /**
+     * Раздел по slug для фронтенда: мало собственного статуса — раздел в скрытой ветке тоже
+     * не должен открываться по прямой ссылке, поэтому `visible()`, а не `active()`.
+     */
     public function findActive($slug): ?Category
     {
-        return Category::find()->active()->andWhere(['slug' => $slug])->one();
+        return Category::find()->visible()->andWhere(['slug' => $slug])->one();
     }
 
     public function findBySlug($slug): ?Category
     {
-        return Category::find()->andWhere(['slug' => $slug])->one();
+        return Category::find()->visible()->andWhere(['slug' => $slug])->one();
     }
 
     /**
@@ -81,7 +89,7 @@ class CategoryReadRepository
 
     public function getTreeWithSubsOf(?Category $category = null): array
     {
-        $query = Category::find()->orderBy('lft');
+        $query = Category::find()->visible()->orderBy('lft');
         if ($category) {
             $parents = $this->treeScope->parentsQuery($category)->all();
             $criteria = ['or', ['depth' => 1]];
