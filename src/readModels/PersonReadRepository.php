@@ -10,6 +10,7 @@ namespace Besnovatyj\Person\readModels;
 use DateInterval;
 use DateTimeImmutable;
 use Exception;
+use Besnovatyj\Contracts\search\SearchDocument;
 use Besnovatyj\Person\entities\Category;
 use Besnovatyj\Person\entities\person\Person;
 use Besnovatyj\Person\forms\frontend\search\SearchForm;
@@ -75,6 +76,38 @@ class PersonReadRepository
         $person = $query->one();
         return $person;
 //        return Person::find()->alias('p')->active('p')->andWhere(['id' => $id])->one();
+    }
+
+    /**
+     * Персоны для сквозного поиска — только публично доступные ({@see PersonQuery::visible()}).
+     *
+     * Генератор с чтением пачками: полная переиндексация не должна держать в памяти всю картотеку.
+     * Поля отдаются СЫРЫМИ — нормализация текста едина для всех модулей и выполняется модулем поиска.
+     *
+     * @return iterable<SearchDocument>
+     */
+    public function searchDocuments(): iterable
+    {
+        $query = Person::find()->alias('p')->visible('p')
+            ->with(['category', 'mainPhoto'])
+            ->orderBy(['p.id' => SORT_ASC]);
+
+        /** @var Person $person */
+        foreach ($query->each(100) as $person) {
+            yield new SearchDocument(
+                type: 'person.person',
+                entityId: (int)$person->id,
+                route: '/Person/person/person',
+                params: ['id' => (int)$person->id],
+                title: (string)$person->name,
+                text: (string)$person->description,
+                keywords: (string)($person->category->name ?? ''),
+                // `created_at` здесь — INT-колонка с Unix-timestamp (в отличие от DATETIME
+                // в блоге и афише), поэтому приведение к int корректно и strtotime() не нужен.
+                date: $person->created_at === null ? null : (int)$person->created_at,
+                image: $person->mainPhoto?->getThumbUrl('file', 'frontGrid'),
+            );
+        }
     }
 
     private function getProvider(ActiveQuery $query): ActiveDataProvider

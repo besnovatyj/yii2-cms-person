@@ -7,6 +7,7 @@
 
 namespace Besnovatyj\Person\readModels;
 
+use Besnovatyj\Contracts\search\SearchDocument;
 use Besnovatyj\Person\entities\Category;
 use Besnovatyj\TreeManager\Manager\TreeQueryScope;
 
@@ -53,6 +54,29 @@ class CategoryReadRepository
     public function findBySlug($slug): ?Category
     {
         return Category::find()->andWhere(['slug' => $slug])->one();
+    }
+
+    /**
+     * Разделы персон для сквозного поиска — только видимые целиком, вместе с предками
+     * ({@see \Besnovatyj\Person\entities\queries\CategoryQuery::visible()}).
+     *
+     * @return iterable<SearchDocument>
+     */
+    public function searchDocuments(): iterable
+    {
+        $query = Category::find()->visible()->orderBy(['id' => SORT_ASC]);
+
+        /** @var Category $category */
+        foreach ($query->each(100) as $category) {
+            yield new SearchDocument(
+                type: 'person.category',
+                entityId: (int)$category->id,
+                route: '/Person/person/category',
+                params: ['slug' => $category->slug],
+                title: (string)$category->name,
+                text: (string)$category->description,
+            );
+        }
     }
 
     public function getTreeWithSubsOf(?Category $category = null): array

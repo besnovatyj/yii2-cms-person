@@ -14,13 +14,17 @@ use Besnovatyj\Contracts\module\ProvidesAdminMenu;
 use Besnovatyj\Contracts\module\ProvidesDirectories;
 use Besnovatyj\Contracts\module\ProvidesMigrations;
 use Besnovatyj\Contracts\module\ProvidesOptions;
+use Besnovatyj\Contracts\search\SearchSource;
+use Besnovatyj\Contracts\search\SearchableProvider;
+use Besnovatyj\Person\readModels\CategoryReadRepository;
+use Besnovatyj\Person\readModels\PersonReadRepository;
 use Besnovatyj\Person\widgets\dashboard\PersonsCountTile;
 use Yii;
 
 class Module extends CmsModule implements
     DeclaresModule, ProvidesAdminMenu,
     ProvidesDirectories, ProvidesMigrations,
-    ProvidesOptions, ProvidesDashboardWidgets
+    ProvidesOptions, ProvidesDashboardWidgets, SearchableProvider
 {
     public const bool EDITABLE = true;
     public const string VERSION = '1.0.0';
@@ -47,6 +51,32 @@ class Module extends CmsModule implements
                 priority: 210,
             ),
         ];
+    }
+
+    /**
+     * Контент модуля для сквозного поиска. Реализация {@see SearchableProvider}; вызывается
+     * только модулем поиска, если он установлен.
+     *
+     * @return SearchSource[]
+     */
+    public function searchSources(): array
+    {
+        return [
+            new SearchSource('person.person', 'Персоны', 1.0, 'bi bi-people'),
+            new SearchSource('person.category', 'Разделы персон', 0.7, 'bi bi-diagram-3'),
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function searchDocuments(string $type): iterable
+    {
+        return match ($type) {
+            'person.person' => (new PersonReadRepository())->searchDocuments(),
+            'person.category' => (new CategoryReadRepository())->searchDocuments(),
+            default => [],
+        };
     }
 
 }
