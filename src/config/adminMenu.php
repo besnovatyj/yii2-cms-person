@@ -7,6 +7,9 @@
 
 declare(strict_types=1);
 
+use Besnovatyj\Contracts\adminMenu\AdminMenuLocation;
+use Besnovatyj\Contracts\adminMenu\AdminMenuPlacement;
+
 return [
 
     // Актёры
@@ -19,13 +22,13 @@ return [
         },
         '_meta' => [
             'placements' => [
-                [
-                    'location' => 'left-sidebar',
-                    'group' => 'Person',
-                    'groupIcon' => 'bi bi-person-badge',
-                    'priority' => 100,
-                    'groupPriority' => 100,
-                ],
+                new AdminMenuPlacement(
+                    location: AdminMenuLocation::LeftSidebar,
+                    group: 'Person',
+                    groupIcon: 'bi bi-person-badge',
+                    groupPriority: 100,
+                    priority: 100,
+                ),
             ],
         ],
     ],
@@ -40,13 +43,13 @@ return [
         },
         '_meta' => [
             'placements' => [
-                [
-                    'location' => 'left-sidebar',
-                    'group' => 'Person',
-                    'groupIcon' => 'bi bi-person-badge',
-                    'priority' => 100,
-                    'groupPriority' => 100,
-                ],
+                new AdminMenuPlacement(
+                    location: AdminMenuLocation::LeftSidebar,
+                    group: 'Person',
+                    groupIcon: 'bi bi-person-badge',
+                    groupPriority: 100,
+                    priority: 100,
+                ),
             ],
         ],
     ],
@@ -61,13 +64,13 @@ return [
         },
         '_meta' => [
             'placements' => [
-                [
-                    'location' => 'left-sidebar',
-                    'group' => 'Person',
-                    'groupIcon' => 'bi bi-person-badge',
-                    'priority' => 100,
-                    'groupPriority' => 100,
-                ],
+                new AdminMenuPlacement(
+                    location: AdminMenuLocation::LeftSidebar,
+                    group: 'Person',
+                    groupIcon: 'bi bi-person-badge',
+                    groupPriority: 100,
+                    priority: 100,
+                ),
             ],
         ],
     ],
@@ -82,13 +85,13 @@ return [
         },
         '_meta' => [
             'placements' => [
-                [
-                    'location' => 'left-sidebar',
-                    'group' => 'Person',
-                    'groupIcon' => 'bi bi-person-badge',
-                    'priority' => 100,
-                    'groupPriority' => 100,
-                ],
+                new AdminMenuPlacement(
+                    location: AdminMenuLocation::LeftSidebar,
+                    group: 'Person',
+                    groupIcon: 'bi bi-person-badge',
+                    groupPriority: 100,
+                    priority: 100,
+                ),
             ],
         ],
     ],
@@ -103,13 +106,13 @@ return [
         },
         '_meta' => [
             'placements' => [
-                [
-                    'location' => 'left-sidebar',
-                    'group' => 'Person',
-                    'groupIcon' => 'bi bi-person-badge',
-                    'priority' => 100,
-                    'groupPriority' => 100,
-                ],
+                new AdminMenuPlacement(
+                    location: AdminMenuLocation::LeftSidebar,
+                    group: 'Person',
+                    groupIcon: 'bi bi-person-badge',
+                    groupPriority: 100,
+                    priority: 100,
+                ),
             ],
         ],
     ],
