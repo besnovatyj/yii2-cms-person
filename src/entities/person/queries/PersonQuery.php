@@ -10,6 +10,7 @@ namespace Besnovatyj\Person\entities\person\queries;
 use Besnovatyj\Person\entities\Category;
 use Besnovatyj\Person\entities\person\Person;
 use yii\db\ActiveQuery;
+use yii\db\Expression;
 
 class PersonQuery extends ActiveQuery
 {
@@ -44,5 +45,34 @@ class PersonQuery extends ActiveQuery
             [$column => null],
             [$column => Category::find()->visible()->select('id')],
         ]);
+    }
+
+    /**
+     * Добавляет в выборку число видео персоны: колонка `videos_count` → {@see Person::$videos_count}.
+     *
+     * Один коррелированный подзапрос `COUNT(*)` вместо загрузки связи в каждой строке (N+1).
+     * Таблицы и ключи берутся из связи {@see Person::getVideos()} и `tableName()` сущностей —
+     * переименование таблицы или ключа сюда не просочится.
+     */
+    public function withVideosCount(): static
+    {
+        $videos = Person::instance()->getVideos();
+        /** @var class-string<\yii\db\ActiveRecord> $videoClass */
+        $videoClass = $videos->modelClass;
+        $db = $videoClass::getDb();
+
+        $count = $videoClass::find()->select(new Expression('COUNT(*)'));
+        foreach ($videos->link as $videoKey => $personKey) {
+            $count->andWhere([
+                $videoClass::tableName() . '.' . $videoKey =>
+                    new Expression($db->quoteColumnName(Person::tableName() . '.' . $personKey)),
+            ]);
+        }
+
+        if ($this->select === null) {
+            $this->select([Person::tableName() . '.*']);
+        }
+
+        return $this->addSelect(['videos_count' => $count]);
     }
 }

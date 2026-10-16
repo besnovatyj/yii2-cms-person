@@ -5,15 +5,12 @@
  * Copyright (c) 2026 Besnovatyj. Licensed under the MIT License.
  */
 
-use Besnovatyj\Backend\Widgets\grid\ActionColumn;
-use Besnovatyj\Person\entities\person\Person;
 use Besnovatyj\Person\forms\backend\search\PersonSearch;
-use Besnovatyj\Person\helpers\PersonHelper;
+use Besnovatyj\Person\grid\PersonGrid;
 use Besnovatyj\Backend\Widgets\pagination\LinkPager;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
-use yii\helpers\Url;
 use yii\web\View;
 
 /* @var $this View */
@@ -25,6 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
 $this->params['mobileFiltersForm'] = $this->render('_search', ['model' => $searchModel]);
 
 // Стили для htmx спиннера на кнопку "Пометить к удалению"
+// (и на кнопки смены статуса — PersonGrid::htmxButton)
 $this->registerCss('
 /* По умолчанию скрываем спиннер */
 .htmx-indicator {
@@ -58,107 +56,10 @@ $data = GridView::widget([
     ",
 //    'options' => ['class' => 'grid-view table-responsive'],
     'tableOptions' => [
-        'class' => 'table table-hover no-margin table-mobile-cards'
+        'class' => PersonGrid::TABLE_CLASS,
     ],
-    'columns' => [
-        [
-            'label' => 'Фото',
-            'value' => static function (Person $model) {
-                return $model->mainPhoto ? Html::img($model->mainPhoto->getThumbUrl('file', 'admin')) : null;
-            },
-            'format' => 'raw',
-            'contentOptions' => ['style' => 'width: 100px', 'data-label' => 'Фото'],
-        ],
-        [
-            'attribute' => 'name',
-            'value' => function (Person $model) {
-                return Html::a(Html::encode($model->name), ['view', 'id' => $model->id]);
-            },
-            'format' => 'raw',
-            'contentOptions' => ['data-label' => 'ФИО'],
-        ],
-        [
-            'attribute' => 'birthday',
-            'value' => function (Person $model) {
-                return $model->birthday;
-            },
-            'filter' => \Besnovatyj\DateTime\DateTimeRangeWidget::widget([
-                'model' => $searchModel,
-                'attributeFrom' => 'date_from',
-                'attributeTo' => 'date_to',
-                'valueFormat' => 'Y-m-d',
-            ]),
-            'format' => 'date',
-            'contentOptions' => ['data-label' => 'Дата рождения'],
-        ],
-        [
-            'attribute' => 'category_id',
-            'filter' => $searchModel->categoriesList(),
-            'value' => 'category.name',
-            'contentOptions' => ['data-label' => 'Категория, раздел'],
-        ],
-        [
-            'attribute' => 'status',
-            'filter' => $searchModel->statusList(),
-            'value' => function (Person $model) {
-                return PersonHelper::statusLabel($model);
-            },
-            'format' => 'raw',
-            'contentOptions' => ['data-label' => 'Статус'],
-        ],
-        [
-            'attribute' => 'videosCount',
-            'label' => 'Видео',
-            'value' => function (Person $model) {
-                return count($model->videos);
-            },
-            'format' => 'raw',
-            'contentOptions' => ['data-label' => 'Видео'],
-        ],
-        [
-            'class' => ActionColumn::class,
-            'template' => '{view} {update} {mark-for-deletion}',
-            'buttons' => [
-                'view' => static function (string $url, Person $model): string {
-                    return Html::a(
-                        '<i class="bi bi-eye"></i>',
-                        ['view', 'id' => $model->id],
-                        ['class' => 'btn btn-sm btn-outline-secondary', 'title' => 'Смотреть'],
-                    );
-                },
-                'update' => static function (string $url, Person $model): string {
-                    return Html::a(
-                        '<i class="bi bi-pencil"></i>',
-                        ['update', 'id' => $model->id],
-                        ['class' => 'btn btn-sm btn-outline-primary', 'title' => 'Изменить'],
-                    );
-                },
-                'mark-for-deletion' => static function (string $url, Person $model): string {
-                    if ($model->isPendingDelete()) {
-                        return Html::tag('span', '<i class="bi bi-trash"></i>', [
-                            'class' => 'btn btn-sm btn-danger disabled',
-                            'title' => 'Уже помечен к удалению',
-                        ]);
-                    }
-                    return Html::a(
-                        '<i class="bi bi-trash"></i>'.
-                        '<span class="spinner-border spinner-border-sm htmx-indicator" role="status" aria-hidden="true"></span>',
-                        '#',
-                        [
-                            'class' => 'btn btn-sm btn-outline-danger d-inline-flex align-items-center gap-1',
-                            'title' => 'Пометить к удалению',
-                            'hx-post' => Url::to(['mark-for-deletion', 'id' => $model->id]),
-                            'hx-target' => 'closest tr',
-                            'hx-swap' => 'outerHTML swap:0.5s',
-                            // 'hx-confirm' => 'Пометить «' . Html::encode($model->name) . '» к удалению?',
-                            // Указываем htmx, что индикатор находится внутри ЭТОГО элемента
-                            'hx-indicator' => 'this',
-                        ],
-                    );
-                },
-            ],
-        ]
-    ],
+    // Колонки — в PersonGrid: из них же контроллёр собирает строку для htmx-ответов
+    'columns' => PersonGrid::columns($searchModel),
 ]);
 
 $pager = LinkPager::widget([

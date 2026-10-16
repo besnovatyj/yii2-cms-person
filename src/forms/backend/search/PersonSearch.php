@@ -38,7 +38,9 @@ class PersonSearch extends Model
      */
     public function search(array $params): ActiveDataProvider
     {
-        $query = Person::find()->with('mainPhoto', 'category');
+        $query = Person::find()
+            ->withVideosCount()
+            ->with('mainPhoto', 'category');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

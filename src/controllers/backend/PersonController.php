@@ -14,17 +14,20 @@ use Besnovatyj\Person\entities\person\Person;
 use Besnovatyj\Person\entities\person\Photo;
 use Besnovatyj\Person\forms\backend\person\PersonForm;
 use Besnovatyj\Person\forms\backend\search\PersonSearch;
+use Besnovatyj\Person\grid\PersonGrid;
 use Besnovatyj\Person\image\PersonImageOwner;
 use Besnovatyj\Person\repositories\NotFoundException;
 use Besnovatyj\Person\repositories\PersonRepository;
 use Besnovatyj\Person\services\manage\PersonManageService;
 use Besnovatyj\Kernel\controller\ControllerTrait;
 use Besnovatyj\Kernel\urlmanager\UrlManagerHelperTrait;
+use DomainException;
 use Throwable;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\filters\VerbFilter;
 use yii\helpers\VarDumper;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -178,40 +181,22 @@ class PersonController extends Controller
 
     /**
      * @param int $id
-     * @return Response
+     * @return Response|string строка таблицы при htmx-запросе, иначе редирект
+     * @throws BadRequestHttpException|NotFoundHttpException
      */
-    public function actionActivate(int $id): Response
+    public function actionActivate(int $id): Response|string
     {
-        try {
-            $this->service->activate($id);
-        } catch (Throwable $e) {
-            Yii::$app->errorHandler->logException($e);
-            if (YII_DEBUG) {
-                Yii::$app->session->setFlash('error', VarDumper::dumpAsString($e->getMessage()));
-            } else {
-                Yii::$app->session->setFlash('error', 'Ошибка');
-            }
-        }
-        return $this->goReferer();
+        return $this->switchState($id, fn (int $id) => $this->service->activate($id));
     }
 
     /**
      * @param int $id
-     * @return Response
+     * @return Response|string строка таблицы при htmx-запросе, иначе редирект
+     * @throws BadRequestHttpException|NotFoundHttpException
      */
-    public function actionDraft(int $id): Response
+    public function actionDraft(int $id): Response|string
     {
-        try {
-            $this->service->draft($id);
-        } catch (Throwable $e) {
-            Yii::$app->errorHandler->logException($e);
-            if (YII_DEBUG) {
-                Yii::$app->session->setFlash('error', VarDumper::dumpAsString($e->getMessage()));
-            } else {
-                Yii::$app->session->setFlash('error', 'Ошибка');
-            }
-        }
-        return $this->goReferer();
+        return $this->switchState($id, fn (int $id) => $this->service->draft($id));
     }
 
     /**
@@ -222,30 +207,47 @@ class PersonController extends Controller
      *
      * @param int $id
      * @return Response|string
-     * @throws NotFoundHttpException
+     * @throws BadRequestHttpException|NotFoundHttpException
      */
     public function actionMarkForDeletion(int $id): Response|string
     {
-        $isHtmx = Yii::$app->request->headers->has('HX-Request');
+        return $this->switchState($id, fn (int $id) => $this->service->markForDeletion($id));
+    }
+
+    /**
+     * Смена статуса персоны.
+     *
+     * htmx-запрос (заголовок HX-Request) получает обновлённую строку таблицы {@see PersonGrid::renderRow()}.
+     * Ошибки отданы {@see \yii\web\ErrorHandler}: отказ доменной логики (например, «Already active.» с
+     * устаревшей страницы) — {@see BadRequestHttpException} с текстом, нет персоны — 404, прочее всплывает
+     * как есть. Глобальный обработчик админки (`htmx-errors.ts`) показывает их тостом.
+     * Обычный запрос — flash при ошибке и возврат на исходную страницу.
+     *
+     * @param int                $id
+     * @param callable(int):void $operation метод сервиса
+     * @throws BadRequestHttpException|NotFoundHttpException
+     */
+    private function switchState(int $id, callable $operation): Response|string
+    {
+        if (Yii::$app->request->headers->has('HX-Request')) {
+            $this->findModel($id);
+            try {
+                $operation($id);
+            } catch (DomainException $e) {
+                throw new BadRequestHttpException($e->getMessage(), 0, $e);
+            }
+            return PersonGrid::renderRow($this->findModel($id));
+        }
 
         try {
-            $this->service->markForDeletion($id);
+            $operation($id);
         } catch (Throwable $e) {
             Yii::$app->errorHandler->logException($e);
-            if ($isHtmx) {
-                // Возвращаем строку без изменений — пометка не удалась
-                return $this->renderPartial('_row', ['model' => $this->findModel($id)]);
-            }
             if (YII_DEBUG) {
                 Yii::$app->session->setFlash('error', VarDumper::dumpAsString($e->getMessage()));
             } else {
                 Yii::$app->session->setFlash('error', 'Ошибка');
             }
-            return $this->goReferer();
-        }
-
-        if ($isHtmx) {
-            return $this->renderPartial('_row', ['model' => $this->findModel($id)]);
         }
         return $this->goReferer();
     }

@@ -96,25 +96,4 @@ return [
         ],
     ],
 
-    // Импорт из OldPerson
-    [
-        'label' => 'Импорт из OldPerson',
-        'iconClass' => 'bi bi-download me-1',
-        'url' => ['/Person/backend/import/index'],
-        'active' => static function () {
-            return strpos(\Yii::$app->request->url, 'Person/backend/import');
-        },
-        '_meta' => [
-            'placements' => [
-                new AdminMenuPlacement(
-                    location: AdminMenuLocation::LeftSidebar,
-                    group: 'Person',
-                    groupIcon: 'bi bi-person-badge',
-                    groupPriority: 100,
-                    priority: 100,
-                ),
-            ],
-        ],
-    ],
-
 ]; // PERSON

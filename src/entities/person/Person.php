@@ -8,6 +8,7 @@
 namespace Besnovatyj\Person\entities\person;
 
 use DateTimeImmutable;
+use DomainException;
 use Exception;
 use Besnovatyj\Meta\MetaBehavior;
 use Besnovatyj\PessimisticLock\PessimisticLockBehavior;
@@ -45,6 +46,12 @@ class Person extends ActiveRecord implements AggregateRoot
     public const int STATUS_PENDING_DELETE = 2;
 
     public $meta;
+
+    /**
+     * Число видео — заполняется подзапросом {@see PersonQuery::withVideosCount()}, иначе null.
+     * ActiveRecord::populateRecord() кладёт в публичное свойство колонку выборки с тем же именем.
+     */
+    public ?int $videos_count = null;
 
     public static function create(
         $categoryId,
