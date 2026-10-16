@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * Copyright (c) 2026 Besnovatyj. Licensed under the MIT License.
  */
@@ -24,7 +23,7 @@ return [
             'placements' => [
                 new AdminMenuPlacement(
                     location: AdminMenuLocation::LeftSidebar,
-                    group: 'Person',
+                    group: 'Все актёры',
                     groupIcon: 'bi bi-person-badge',
                     groupPriority: 100,
                     priority: 100,
@@ -45,7 +44,7 @@ return [
             'placements' => [
                 new AdminMenuPlacement(
                     location: AdminMenuLocation::LeftSidebar,
-                    group: 'Person',
+                    group: 'Все актёры',
                     groupIcon: 'bi bi-person-badge',
                     groupPriority: 100,
                     priority: 100,
@@ -66,7 +65,7 @@ return [
             'placements' => [
                 new AdminMenuPlacement(
                     location: AdminMenuLocation::LeftSidebar,
-                    group: 'Person',
+                    group: 'Все актёры',
                     groupIcon: 'bi bi-person-badge',
                     groupPriority: 100,
                     priority: 100,
@@ -87,7 +86,7 @@ return [
             'placements' => [
                 new AdminMenuPlacement(
                     location: AdminMenuLocation::LeftSidebar,
-                    group: 'Person',
+                    group: 'Все актёры',
                     groupIcon: 'bi bi-person-badge',
                     groupPriority: 100,
                     priority: 100,

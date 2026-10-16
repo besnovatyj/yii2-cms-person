@@ -22,7 +22,7 @@ use Besnovatyj\Backend\Widgets\pagination\LinkPager;
 /* @var $frontendUrl string */
 
 $this->title = $category->name;
-$this->params['breadcrumbs'][] = ['label' => 'Categories', 'url' => ['list']];
+$this->params['breadcrumbs'][] = ['label' => 'Категории', 'url' => ['list']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 

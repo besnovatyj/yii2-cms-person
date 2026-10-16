@@ -36,7 +36,7 @@ use yii\web\View;
                     </div>
                     <div class="col-6">
                         <?= $form->field($model->categories, 'main')->label('Категория')
-                            ->dropDownList($model->categories->categoriesList(), ['prompt' => 'Not selected', 'class' => 'custom-select']) ?>
+                            ->dropDownList($model->categories->categoriesList(), ['prompt' => 'Не выбрана', 'class' => 'custom-select']) ?>
                     </div>
                     <div class="col-6">
                         <?= $model->getAttributeLabel('birthday') ?>
